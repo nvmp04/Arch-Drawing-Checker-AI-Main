@@ -1,0 +1,2689 @@
+{
+  "data": [
+    {
+      "id": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+      "name": "TIEU CHI CHTK NHA O THAP TANG_gui CDS — 4 SAO",
+      "fileName": "TIEU CHI CHTK NHA O THAP TANG_gui CDS.xlsx",
+      "sheetName": "4 SAO",
+      "ruleCount": 92,
+      "uploadedAt": "2026-09-27T14:20:56.213Z",
+      "sections": [
+        {
+          "code": "1",
+          "category": "facade",
+          "title": "MẶT NGOÀI CÔNG TRÌNH",
+          "rules": [
+            {
+              "id": "ae8e3ef2-8b8f-43ed-9ef6-a7088f8f4573",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.1",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Hoàn thiện mặt tiền",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Sơn nước ngoại thất chung.\n- Sơn đá / sơn gai mảng nhấn.",
+              "requirementLines": [
+                "Sơn nước ngoại thất chung.",
+                "Sơn đá / sơn gai mảng nhấn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 4
+            },
+            {
+              "id": "7725e450-80a8-4319-a388-b6c522ae289d",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.2",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Chi tiết trang trí, phào chỉ",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Phào chỉ đơn giản theo TKYT được duyệt..\n- Phào chỉ tối đa 3 cấp và phào chỉ đắp vữa.",
+              "requirementLines": [
+                "Phào chỉ đơn giản theo TKYT được duyệt..",
+                "Phào chỉ tối đa 3 cấp và phào chỉ đắp vữa."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 5
+            },
+            {
+              "id": "9eeadb64-8cbc-4890-898d-0ad2ed193c4b",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.3",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Hệ ban công - sân thượng & lan can",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Sắt hộp mạ kẽm (thường), La/tấm/sắt đặc dùng thép đen, sơn hoàn thiện/sơn môi trường biển (tùy dự án).\n- Lan can can kính dán cường lực 10.76 mm + phụ kiện Inox 304 trung cấp.\n- Phễu thu sàn theo Danh mục vật tư.\n- Gạch porcelain cao cấp (trong nước hoặc nhập khẩu châu Á) chống trượt.",
+              "requirementLines": [
+                "Sắt hộp mạ kẽm (thường), La/tấm/sắt đặc dùng thép đen, sơn hoàn thiện/sơn môi trường biển (tùy dự án).",
+                "Lan can can kính dán cường lực 10.76 mm + phụ kiện Inox 304 trung cấp.",
+                "Phễu thu sàn theo Danh mục vật tư.",
+                "Gạch porcelain cao cấp (trong nước hoặc nhập khẩu châu Á) chống trượt."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 6
+            },
+            {
+              "id": "68aae63a-2d62-409a-8113-b19712292afc",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.4",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Hệ cửa, kính & phụ kiện",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cửa đi: Khung nhôm hệ #55 (#93 cửa lùa) dày 1.4mm, kính cường lực 8mm.\n- Cửa sổ: Khung nhôm hệ #55 dày 1.2mm, kính cường lực 6mm.\n- Phụ kiện theo Danh mục vật tư-trang thiết bị.",
+              "requirementLines": [
+                "Cửa đi: Khung nhôm hệ #55 (#93 cửa lùa) dày 1.4mm, kính cường lực 8mm.",
+                "Cửa sổ: Khung nhôm hệ #55 dày 1.2mm, kính cường lực 6mm.",
+                "Phụ kiện theo Danh mục vật tư-trang thiết bị."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 7
+            },
+            {
+              "id": "eef49ccc-71c6-42d2-81f0-6917fd96ea1e",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.4.1",
+              "parentCode": "1.4",
+              "headings": [
+                "Hệ cửa, kính & phụ kiện"
+              ],
+              "title": "Cửa đi mở",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cửa đi 01 cánh mở + ô fix trên (Cao x Rộng): 2800 x 1100mm.\n- Cửa đi 02 cánh mở + ô fix trên (Cao x Rộng): 2800 x 1650mm.\n- Cửa đi 02 cánh mở + ô fix trên + ô fix 2 bên (Cao x Rộng): 2800 x 2400mm.\n- Cửa đi 02 cánh mở + 02 cánh cố định 02 bên + ô fix trên (Cao x Rộng): 2800 x 3200mm.",
+              "requirementLines": [
+                "Cửa đi 01 cánh mở + ô fix trên (Cao x Rộng): 2800 x 1100mm.",
+                "Cửa đi 02 cánh mở + ô fix trên (Cao x Rộng): 2800 x 1650mm.",
+                "Cửa đi 02 cánh mở + ô fix trên + ô fix 2 bên (Cao x Rộng): 2800 x 2400mm.",
+                "Cửa đi 02 cánh mở + 02 cánh cố định 02 bên + ô fix trên (Cao x Rộng): 2800 x 3200mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 8
+            },
+            {
+              "id": "4f499ca8-9df8-4b92-90b3-7e29d10c9871",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.4.2",
+              "parentCode": "1.4",
+              "headings": [
+                "Hệ cửa, kính & phụ kiện"
+              ],
+              "title": "Cửa đi lùa",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cửa đi 02 cánh lùa (Cao x Rộng): 2400 x 1400mm/1650mm.\n- Cửa đi 03 cánh lùa (Cao x Rộng): 2400 x 2400mm.\n- Cửa đi 02 cánh lùa + ô fix trên (Cao x Rộng): 2800 x 1400mm/1650mm.\n- Cửa đi 03 cánh lùa + ô fix trên (Cao x Rộng): 2800 x 2400mm.\n- Cửa đi 04 cánh lùa + ô fix trên (Cao x Rộng): 2800 x 3200mm.",
+              "requirementLines": [
+                "Cửa đi 02 cánh lùa (Cao x Rộng): 2400 x 1400mm/1650mm.",
+                "Cửa đi 03 cánh lùa (Cao x Rộng): 2400 x 2400mm.",
+                "Cửa đi 02 cánh lùa + ô fix trên (Cao x Rộng): 2800 x 1400mm/1650mm.",
+                "Cửa đi 03 cánh lùa + ô fix trên (Cao x Rộng): 2800 x 2400mm.",
+                "Cửa đi 04 cánh lùa + ô fix trên (Cao x Rộng): 2800 x 3200mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 9
+            },
+            {
+              "id": "fdcd2eef-09d0-46c8-ad2e-18ba52f53f6d",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.4.3",
+              "parentCode": "1.4",
+              "headings": [
+                "Hệ cửa, kính & phụ kiện"
+              ],
+              "title": "Cửa sổ mở quay/mở bật",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cửa sổ 01 cánh mở/bật (Cao x Rộng): 1500 x 700mm.\n- Cửa sổ 02 cánh mở/bật (Cao x Rộng): 1500 x 1500mm.\n- Cửa sổ 01 cánh mở/bật + ô fix trên/dưới (Cao x Rộng): 1900 x 700mm.\n- Cửa sổ 02 cánh mở/bật + ô fix trên/dưới (Cao x Rộng): 1900 x 1500mm.\n- Cửa sổ 01 cánh mở/bật + ô fix trên + ô fix dưới sát sàn (Cao x Rộng): 2800 x 700mm.\n- Cửa sổ 02 cánh mở/bật + ô fix trên + ô fix dưới sát sàn (Cao x Rộng): 2800 x 1500mm.",
+              "requirementLines": [
+                "Cửa sổ 01 cánh mở/bật (Cao x Rộng): 1500 x 700mm.",
+                "Cửa sổ 02 cánh mở/bật (Cao x Rộng): 1500 x 1500mm.",
+                "Cửa sổ 01 cánh mở/bật + ô fix trên/dưới (Cao x Rộng): 1900 x 700mm.",
+                "Cửa sổ 02 cánh mở/bật + ô fix trên/dưới (Cao x Rộng): 1900 x 1500mm.",
+                "Cửa sổ 01 cánh mở/bật + ô fix trên + ô fix dưới sát sàn (Cao x Rộng): 2800 x 700mm.",
+                "Cửa sổ 02 cánh mở/bật + ô fix trên + ô fix dưới sát sàn (Cao x Rộng): 2800 x 1500mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 10
+            },
+            {
+              "id": "2adea7d6-168a-46c2-83be-d514f28cd05a",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.4.4",
+              "parentCode": "1.4",
+              "headings": [
+                "Hệ cửa, kính & phụ kiện"
+              ],
+              "title": "Cửa sổ lùa",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cửa sổ 02 cánh lùa (Cao x Rộng): 1500 x 1400mm/1650mm.\n- Cửa sổ 03 cánh lùa (Cao x Rộng): 1500 x 2400mm.\n- Cửa sổ 04 cánh lùa (Cao x Rộng): 1500 x 3200mm.\n- Cửa sổ 02 cánh lùa + ô fix trên/dưới (Cao x Rộng): 1900 x 1400mm/1650mm.\n- Cửa sổ 03 cánh lùa + ô fix trên/dưới (Cao x Rộng): 1900 x 2400mm.\n- Cửa sổ 04 cánh lùa + ô fix trên/dưới (Cao x Rộng): 1900 x 3200mm.",
+              "requirementLines": [
+                "Cửa sổ 02 cánh lùa (Cao x Rộng): 1500 x 1400mm/1650mm.",
+                "Cửa sổ 03 cánh lùa (Cao x Rộng): 1500 x 2400mm.",
+                "Cửa sổ 04 cánh lùa (Cao x Rộng): 1500 x 3200mm.",
+                "Cửa sổ 02 cánh lùa + ô fix trên/dưới (Cao x Rộng): 1900 x 1400mm/1650mm.",
+                "Cửa sổ 03 cánh lùa + ô fix trên/dưới (Cao x Rộng): 1900 x 2400mm.",
+                "Cửa sổ 04 cánh lùa + ô fix trên/dưới (Cao x Rộng): 1900 x 3200mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 11
+            },
+            {
+              "id": "aa4bf2ff-8e55-4d2d-b365-8014eee5536f",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.4.5",
+              "parentCode": "1.4",
+              "headings": [
+                "Hệ cửa, kính & phụ kiện"
+              ],
+              "title": "Vách kính cố định",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- 01 khung cách sàn 0.9m (Cao x Rộng): 1500mm x 700mm.\n- 01 khung cách sàn 0.5m (Cao x Rộng): 1900mm x 700mm.\n- 01 khung sát sàn (Cao x Rộng): 2400mm x 700mm.\n- 02 khung sát sàn (Cao x Rộng): 2400mm x 1650mm.\n- 03 khung sát sàn (Cao x Rộng): 2400mm x 2400mm.",
+              "requirementLines": [
+                "01 khung cách sàn 0.9m (Cao x Rộng): 1500mm x 700mm.",
+                "01 khung cách sàn 0.5m (Cao x Rộng): 1900mm x 700mm.",
+                "01 khung sát sàn (Cao x Rộng): 2400mm x 700mm.",
+                "02 khung sát sàn (Cao x Rộng): 2400mm x 1650mm.",
+                "03 khung sát sàn (Cao x Rộng): 2400mm x 2400mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 12
+            },
+            {
+              "id": "cc219f32-07c0-4803-b74b-59485a9086e1",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.5",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Hiên trệt, Bậc cấp, Chân tường",
+              "category": "facade",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Hiên Trệt & Bậc cấp: Đá Granite bề mặt nhám (trong nước), Gạch porcelain cao cấp (trong nước hoặc nhập khẩu châu Á) chống trượt.\n- Chân tường: Gạch porcelain cao cấp (trong nước hoặc nhập khẩu châu Á) + ron âm phân vị.",
+              "requirementLines": [
+                "Hiên Trệt & Bậc cấp: Đá Granite bề mặt nhám (trong nước), Gạch porcelain cao cấp (trong nước hoặc nhập khẩu châu Á) chống trượt.",
+                "Chân tường: Gạch porcelain cao cấp (trong nước hoặc nhập khẩu châu Á) + ron âm phân vị."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 13
+            },
+            {
+              "id": "550e66a4-8067-4fd0-b859-def95362aab8",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.6",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Chiều cao lan can",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "1.1m",
+              "requirement": "1.1m (min)",
+              "requirementLines": [
+                "1.1m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 14
+            },
+            {
+              "id": "51526642-7b2c-4d48-a752-e7a1f88ff526",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.7",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Chiều cao cổng - hàng rào",
+              "category": "facade",
+              "checkType": null,
+              "operator": "between",
+              "value": "1.2m - 2.6m",
+              "requirement": "1.2m - 2.6m\n(hoặc theo quy định riêng của địa phương - nếu có)",
+              "requirementLines": [
+                "1.2m - 2.6m",
+                "(hoặc theo quy định riêng của địa phương - nếu có)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "note": "(hoặc theo quy định riêng của địa phương - nếu có)",
+              "isActive": true,
+              "sourceRow": 15
+            },
+            {
+              "id": "9f59fd23-68ac-4aa5-bf54-e37a796b3819",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "1.8",
+              "headings": [
+                "Chênh cote giữa tầng 1 (trệt) với cote vỉa hè"
+              ],
+              "title": "Shophouse, Shop Villa",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "150mm",
+              "requirement": "150mm (min)",
+              "requirementLines": [
+                "150mm (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 17
+            },
+            {
+              "id": "9ebad724-8618-4ecb-a632-504f770fd0c9",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "1.8",
+              "headings": [
+                "Chênh cote giữa tầng 1 (trệt) với cote vỉa hè"
+              ],
+              "title": "Các mẫu nhà còn lại (Townhouse, Semi Villa, Villa)",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "450mm",
+              "requirement": "450mm (min)",
+              "requirementLines": [
+                "450mm (min)"
+              ],
+              "houseTypes": [
+                "townhouse",
+                "semi-villa",
+                "single-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 18
+            },
+            {
+              "id": "4b8a6e4c-ccac-41d6-8eff-c76e76391525",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "1.9",
+              "headings": [
+                "Cao độ tầng 1 (trệt) so với cote vỉa hè đối với các mẫu nhà CÓ HẦM"
+              ],
+              "title": "Townhouse, Semi Villa, Single Villa",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "1.2m",
+              "requirement": "1.2m (min)",
+              "requirementLines": [
+                "1.2m (min)"
+              ],
+              "houseTypes": [
+                "townhouse",
+                "semi-villa",
+                "single-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 20
+            },
+            {
+              "id": "86c8de47-d355-40c6-8e2e-ffb2c41a8e7d",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "1.9",
+              "headings": [
+                "Cao độ tầng 1 (trệt) so với cote vỉa hè đối với các mẫu nhà CÓ HẦM"
+              ],
+              "title": "Shophouse, Shop Semi Villa, Shop Villa",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "1.5m",
+              "requirement": "1.5m (min)",
+              "requirementLines": [
+                "1.5m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 21
+            },
+            {
+              "id": "989f33bc-15c0-4efe-8e39-74f403233ea0",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.10",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Kích thước lọt lòng nhà xe hơi",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.8 x 5.6m",
+              "requirement": "2.8 x 5.6m (min)",
+              "requirementLines": [
+                "2.8 x 5.6m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 22
+            },
+            {
+              "id": "e372ae24-0c85-43a8-8e2e-6c44d497ab1c",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "1.11",
+              "parentCode": "1",
+              "headings": [],
+              "title": "Kích thước lọt lòng nhà xe hơi - Single Villa",
+              "category": "facade",
+              "checkType": null,
+              "operator": "gte",
+              "value": "5.6 x 5.6m",
+              "requirement": "5.6 x 5.6m (min)\n(02 chỗ đậu xe - nếu có thể bố trí)",
+              "requirementLines": [
+                "5.6 x 5.6m (min)",
+                "(02 chỗ đậu xe - nếu có thể bố trí)"
+              ],
+              "houseTypes": [
+                "single-villa"
+              ],
+              "note": "(02 chỗ đậu xe - nếu có thể bố trí)",
+              "isActive": true,
+              "sourceRow": 23
+            }
+          ],
+          "ruleCount": 18
+        },
+        {
+          "code": "2",
+          "category": "dimension",
+          "title": "KÍCH THƯỚC CÔNG TRÌNH",
+          "rules": [
+            {
+              "id": "4f0aacec-243b-4971-b86b-f8508e39363c",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "2.1.1",
+              "headings": [
+                "CHIỀU CAO TẦNG",
+                "Tầng hầm"
+              ],
+              "title": "Shophouse, Shop Semi Villa, Shop Villa",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "3.3m",
+              "requirement": "3.3m (min)",
+              "requirementLines": [
+                "3.3m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 27
+            },
+            {
+              "id": "a80869f9-110a-4e65-bdaf-abe3c0cecc39",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "2.1.1",
+              "headings": [
+                "CHIỀU CAO TẦNG",
+                "Tầng hầm"
+              ],
+              "title": "Townhouse, Semi Villa, Single Villa",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.7m",
+              "requirement": "2.7m (min)",
+              "requirementLines": [
+                "2.7m (min)"
+              ],
+              "houseTypes": [
+                "townhouse",
+                "semi-villa",
+                "single-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 28
+            },
+            {
+              "id": "815265bf-5bf7-4ca9-acb9-a882cf85f3f7",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "2.1.2",
+              "headings": [
+                "CHIỀU CAO TẦNG",
+                "Tầng 1 (tầng trệt):"
+              ],
+              "title": "Shophouse, Shop Semi Villa, Shop Villa",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "4.0m",
+              "requirement": "4.0m (min)",
+              "requirementLines": [
+                "4.0m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 30
+            },
+            {
+              "id": "875d06d3-4a4e-48ad-b18a-f1f8a8493dc2",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "2.1.2",
+              "headings": [
+                "CHIỀU CAO TẦNG",
+                "Tầng 1 (tầng trệt):"
+              ],
+              "title": "Townhouse, Semi Villa, Single Villa",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "3.8m",
+              "requirement": "3.8m (min)",
+              "requirementLines": [
+                "3.8m (min)"
+              ],
+              "houseTypes": [
+                "townhouse",
+                "semi-villa",
+                "single-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 31
+            },
+            {
+              "id": "2539c0df-fc65-4e43-8dbc-a00b2f477b2a",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.1.3",
+              "parentCode": "2.1",
+              "headings": [
+                "CHIỀU CAO TẦNG"
+              ],
+              "title": "Tầng 2-3",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "3.4m",
+              "requirement": "3.4m (min)",
+              "requirementLines": [
+                "3.4m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 32
+            },
+            {
+              "id": "56f62366-b310-4703-9432-af60049277be",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.1.4",
+              "parentCode": "2.1",
+              "headings": [
+                "CHIỀU CAO TẦNG"
+              ],
+              "title": "Tầng tum (nếu có)",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.7m",
+              "requirement": "2.7m (min)\n(lưu ý khoảng overhead nếu có sử dụng thang máy)",
+              "requirementLines": [
+                "2.7m (min)",
+                "(lưu ý khoảng overhead nếu có sử dụng thang máy)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "note": "(lưu ý khoảng overhead nếu có sử dụng thang máy)",
+              "isActive": true,
+              "sourceRow": 33
+            },
+            {
+              "id": "ecfc9807-2b00-4306-ad1c-112f04dd2886",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.1",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Phòng khách",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "3.2m",
+              "requirement": "3.2m (min)",
+              "requirementLines": [
+                "3.2m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 35
+            },
+            {
+              "id": "0b9dad7b-9aa9-4e72-b662-ba3d1440e8cb",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.2",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Phòng ăn",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.4m",
+              "requirement": "2.4m (min)",
+              "requirementLines": [
+                "2.4m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 36
+            },
+            {
+              "id": "864456cc-1ab1-4ec8-a681-347735f99814",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.3",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Phòng bếp",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.1m",
+              "requirement": "2.1m (min)",
+              "requirementLines": [
+                "2.1m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 37
+            },
+            {
+              "id": "558f3653-68d5-49a7-83af-346778a90e2b",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.4",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Phòng ngủ master",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.9m",
+              "requirement": "2.9m (min)",
+              "requirementLines": [
+                "2.9m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 38
+            },
+            {
+              "id": "60a8d4ae-d9dd-42d7-8312-ce1b3a98c5fa",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.5",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Phòng ngủ thường",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.7m",
+              "requirement": "2.7m (min)",
+              "requirementLines": [
+                "2.7m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 39
+            },
+            {
+              "id": "a6c6b35e-88b4-432b-b592-c7e5cb61b871",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.6",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Phòng vệ sinh",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "1.45m",
+              "requirement": "1.45m (min)",
+              "requirementLines": [
+                "1.45m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 40
+            },
+            {
+              "id": "530b2a3b-78b0-47bd-b208-3b6e666ba94d",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "2.2.7",
+              "parentCode": "2.2",
+              "headings": [
+                "CHIỀU RỘNG (LỌT LÒNG) CÁC PHÒNG"
+              ],
+              "title": "Ban công giặt phơi",
+              "category": "dimension",
+              "checkType": null,
+              "operator": "gte",
+              "value": "1.2m",
+              "requirement": "1.2m (min)",
+              "requirementLines": [
+                "1.2m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 41
+            }
+          ],
+          "ruleCount": 13
+        },
+        {
+          "code": "3",
+          "category": "stair-ramp",
+          "title": "THANG BỘ - RAMP DỐC HẦM (NẾU CÓ)",
+          "rules": [
+            {
+              "id": "cb23c9ba-3fea-455c-be1f-94528d837b33",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "3.1",
+              "headings": [
+                "Chiều rộng thông thủy vế thang"
+              ],
+              "title": "Single Villa, Shop Villa",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "gte",
+              "value": "1.0m",
+              "requirement": "1.0m (min)",
+              "requirementLines": [
+                "1.0m (min)"
+              ],
+              "houseTypes": [
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 44
+            },
+            {
+              "id": "720d71a0-7c9c-4b4b-9566-c9a041babef7",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "3.1",
+              "headings": [
+                "Chiều rộng thông thủy vế thang"
+              ],
+              "title": "Townhouse, Shophouse, Semi Villa, Shop Semi Villa",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "gte",
+              "value": "0.9m",
+              "requirement": "0.9m (min)",
+              "requirementLines": [
+                "0.9m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 45
+            },
+            {
+              "id": "4c70994c-2d5e-4700-a2f7-62b3ec995dda",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "3.2",
+              "parentCode": "3",
+              "headings": [],
+              "title": "Chiều rộng bậc thang (chung)",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "gte",
+              "value": "250mm",
+              "requirement": "250mm (min)",
+              "requirementLines": [
+                "250mm (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 46
+            },
+            {
+              "id": "d8d56f80-97c9-4b01-bd6a-83a37dd61658",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "3.2",
+              "headings": [
+                "Chiều rộng bậc thang (chung)"
+              ],
+              "title": "Chiều rộng bậc thang đối với Nhà thương mại liên kế (có nêu trong Báo cáo NCKT)",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "gte",
+              "value": "280mm",
+              "requirement": "280mm (min)",
+              "requirementLines": [
+                "280mm (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 47
+            },
+            {
+              "id": "11145c3d-d9fb-41a0-8aea-541df03574da",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "3.3",
+              "parentCode": "3",
+              "headings": [],
+              "title": "Chiều cao thông thủy tại mỗi bậc thang",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2m",
+              "requirement": "2m (min)",
+              "requirementLines": [
+                "2m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 48
+            },
+            {
+              "id": "a7581279-c60f-4c91-8e47-fac2741385bb",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "3.4",
+              "parentCode": "3",
+              "headings": [],
+              "title": "Chiều cao bậc thang",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "lte",
+              "value": "180mm",
+              "requirement": "180mm (max)",
+              "requirementLines": [
+                "180mm (max)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 49
+            },
+            {
+              "id": "25bb4864-69a8-459b-9026-c1be6859479e",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "3.5",
+              "parentCode": "3",
+              "headings": [],
+              "title": "Số bậc thang",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "in-list",
+              "value": "17, 18, 21, 22, 25",
+              "requirement": "17, 18, 21, 22, 25",
+              "requirementLines": [
+                "17, 18, 21, 22, 25"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 50
+            },
+            {
+              "id": "2ffe0ff9-43d3-4bfa-9600-0d8e953a4603",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "3.6",
+              "parentCode": "3",
+              "headings": [],
+              "title": "Độ dốc hầm",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "lte",
+              "value": "18%",
+              "requirement": "18% (max)",
+              "requirementLines": [
+                "18% (max)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 51
+            },
+            {
+              "id": "6b7231d7-3e1c-4ade-88d8-95e28e6f8611",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "3.7",
+              "parentCode": "3",
+              "headings": [],
+              "title": "Chiều rộng lọt lòng ramp",
+              "category": "stair-ramp",
+              "checkType": null,
+              "operator": "gte",
+              "value": "2.3m",
+              "requirement": "2.3m (min)",
+              "requirementLines": [
+                "2.3m (min)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 52
+            }
+          ],
+          "ruleCount": 9
+        },
+        {
+          "code": "4",
+          "category": "structure",
+          "title": "CHI TIẾT CẤU TẠO ĐIỂN HÌNH",
+          "rules": [
+            {
+              "id": "ef43c2ae-39cb-4c0a-acf1-b5ee9ce4e7a5",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.1",
+              "headings": [
+                "Tường xây",
+                "Kicker chân tường",
+                "Quy cách tường xây"
+              ],
+              "title": "Kicker chân tường giáp ban công, lô gia, sân thượng, WC, sàn mái",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kicker bê tông cao 300mm từ sàn Kết cấu.",
+              "requirementLines": [
+                "Kicker bê tông cao 300mm từ sàn Kết cấu."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 57
+            },
+            {
+              "id": "43804121-3403-43d3-8c65-fe336ba3f70e",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.1",
+              "headings": [
+                "Tường xây",
+                "Kicker chân tường",
+                "Quy cách tường xây"
+              ],
+              "title": "Kicker chân tường sàn mái BTCT - mái bằng, Lan can ban công",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kicker bê tông, đỉnh Kicker cao 100 mm so với FFL trong nhà.",
+              "requirementLines": [
+                "Kicker bê tông, đỉnh Kicker cao 100 mm so với FFL trong nhà."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 58
+            },
+            {
+              "id": "80e20ee1-b7a8-4e74-bd08-2b0cf779cce9",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.1.2",
+              "parentCode": "4.1",
+              "headings": [
+                "Tường xây"
+              ],
+              "title": "Trát vữa",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Chung: Vữa mác 75, trát dày 15 mm.",
+              "requirementLines": [
+                "Chung: Vữa mác 75, trát dày 15 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 59
+            },
+            {
+              "id": "ef5f213d-190a-4030-810f-c7d129930bb7",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.2",
+              "headings": [
+                "Tường xây",
+                "Trát vữa"
+              ],
+              "title": "Lưới chống nứt",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Lưới thép hàn, kích thước ô lưới 25x25 hoặc tương đương.\n- Phủ từ vị trí mạch ghép về 2 bên Min 150 mm.",
+              "requirementLines": [
+                "Lưới thép hàn, kích thước ô lưới 25x25 hoặc tương đương.",
+                "Phủ từ vị trí mạch ghép về 2 bên Min 150 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 60
+            },
+            {
+              "id": "7d509171-ad1b-480a-beaf-c76270f39ef3",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.2",
+              "headings": [
+                "Tường xây",
+                "Trát vữa"
+              ],
+              "title": "Trong nhà",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Đối với các cấu kiện trong nhà: Không trát vữa",
+              "requirementLines": [
+                "Đối với các cấu kiện trong nhà: Không trát vữa"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 61
+            },
+            {
+              "id": "2ed2869c-0ba7-4945-9619-2972afcc63c1",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.2",
+              "headings": [
+                "Tường xây",
+                "Trát vữa"
+              ],
+              "title": "Ngoài nhà",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Vữa mác 75, trát dày 15 mm (trát phủ hết chiều sâu tại các ô cửa).",
+              "requirementLines": [
+                "Vữa mác 75, trát dày 15 mm (trát phủ hết chiều sâu tại các ô cửa)."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 62
+            },
+            {
+              "id": "26c506d5-6e38-46c0-8976-242ace84886f",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.2",
+              "headings": [
+                "Tường xây",
+                "Trát vữa"
+              ],
+              "title": "Trát hố gas bể căn bằng, phòng kỹ thuật, tường rào",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Vữa mác 75, trát dày 15 mm.\n- Trát bên trong bể ngầm.",
+              "requirementLines": [
+                "Vữa mác 75, trát dày 15 mm.",
+                "Trát bên trong bể ngầm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 63
+            },
+            {
+              "id": "3e2bd57b-b28c-4639-9c97-d7447bcded33",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.3",
+              "headings": [
+                "Tường xây",
+                "Ron âm"
+              ],
+              "title": "Ron âm tường mặt đứng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Ron âm 10x20 mm hoặc theo thiết kế.",
+              "requirementLines": [
+                "Ron âm 10x20 mm hoặc theo thiết kế."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 65
+            },
+            {
+              "id": "3e1728b0-2eb0-413d-b98e-19a6b3ae1798",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.1.3",
+              "headings": [
+                "Tường xây",
+                "Ron âm"
+              ],
+              "title": "Chỉ ngắt nước",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Ron vuông âm, cắt thủ công kích thước 10x10mm",
+              "requirementLines": [
+                "Ron vuông âm, cắt thủ công kích thước 10x10mm"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 66
+            },
+            {
+              "id": "1bc9b464-3e0a-4def-923d-2883ccd20086",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.1",
+              "headings": [
+                "Sàn",
+                "Sàn tầng 1 (trệt)"
+              ],
+              "title": "Sàn tầng 1 trong nhà",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Không bàn giao sàn bê tông tầng 1 (trệt), ngoại trừ trường hợp công trình có hầm.\n- Thi công dầm thang bộ.\n- Bố trí thép chờ để khách hàng thi công sàn trệt (đ/v Vùng sử dụng dạng kết cấu sàn treo_không san lắp theo cote thiết kế tầng 1).\n- Tôn nền bằng cát/đất theo thiết kế (tùy Vùng).\n- Kiểm tra và đổ bù đất/cát san lắp (nếu có) trước khi bàn giao cho khách hàng. (theo Tiêu chuẩn bàn giao).\n- Khách hàng hoàn thiện theo thiết kế, phù hợp với thiết kế cơ sở, thiết kế kỹ thuật được duyệt.\n- Không bàn giao bể tự hoại, bể nước ngầm.\n- Thi công hố ga tại vị trí đấu nối với hạ tầng bên ngoài, thi công ống thoát nước mưa từ mái về hố ga.",
+              "requirementLines": [
+                "Không bàn giao sàn bê tông tầng 1 (trệt), ngoại trừ trường hợp công trình có hầm.",
+                "Thi công dầm thang bộ.",
+                "Bố trí thép chờ để khách hàng thi công sàn trệt (đ/v Vùng sử dụng dạng kết cấu sàn treo_không san lắp theo cote thiết kế tầng 1).",
+                "Tôn nền bằng cát/đất theo thiết kế (tùy Vùng).",
+                "Kiểm tra và đổ bù đất/cát san lắp (nếu có) trước khi bàn giao cho khách hàng. (theo Tiêu chuẩn bàn giao).",
+                "Khách hàng hoàn thiện theo thiết kế, phù hợp với thiết kế cơ sở, thiết kế kỹ thuật được duyệt.",
+                "Không bàn giao bể tự hoại, bể nước ngầm.",
+                "Thi công hố ga tại vị trí đấu nối với hạ tầng bên ngoài, thi công ống thoát nước mưa từ mái về hố ga."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 69
+            },
+            {
+              "id": "6716ac91-54cb-4e19-a2b8-19a39ebf1e82",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.1",
+              "headings": [
+                "Sàn",
+                "Sàn tầng 1 (trệt)"
+              ],
+              "title": "Sàn thềm, bậc cấp ngoài nhà",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cao bậc hoàn thiện Max 180 mm, Rộng hoàn thiện mặt bậc Min 250 mm.\n- Bậc đầu tiên âm 30 mm so với FFL sân để tránh hở chân bậc.\n\n- Lớp hoàn thiện: theo chi tiết hoàn thiện phân cấp sao.\n- Lớp vữa Mac 75 dày Min 15 mm, dốc min 1% hướng ra ngoài.\n- Xây bậc bằng gạch đặc.\n- Kết cấu BTCT.\n- Đất nền đầm chặt K=0.9",
+              "requirementLines": [
+                "Cao bậc hoàn thiện Max 180 mm, Rộng hoàn thiện mặt bậc Min 250 mm.",
+                "Bậc đầu tiên âm 30 mm so với FFL sân để tránh hở chân bậc.",
+                "Lớp hoàn thiện: theo chi tiết hoàn thiện phân cấp sao.",
+                "Lớp vữa Mac 75 dày Min 15 mm, dốc min 1% hướng ra ngoài.",
+                "Xây bậc bằng gạch đặc.",
+                "Kết cấu BTCT.",
+                "Đất nền đầm chặt K=0.9"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 70
+            },
+            {
+              "id": "48673ee5-c46f-4c54-ad67-7aefcf41d2b3",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.2",
+              "headings": [
+                "Sàn",
+                "Sàn tầng (lầu)"
+              ],
+              "title": "Sàn lầu trong nhà",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Sàn bê tông thô, không hoàn thiện.",
+              "requirementLines": [
+                "Sàn bê tông thô, không hoàn thiện."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 72
+            },
+            {
+              "id": "7d35ee03-4b8c-4969-8a8d-64a0665ebc54",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.2",
+              "headings": [
+                "Sàn",
+                "Sàn tầng (lầu)"
+              ],
+              "title": "Sàn lầu_nhà vệ sinh",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Sàn bê tông thô, không hoàn thiện.",
+              "requirementLines": [
+                "Sàn bê tông thô, không hoàn thiện."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 73
+            },
+            {
+              "id": "10f7351a-2048-4ef0-ab79-167ed46cae0b",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.2.3",
+              "parentCode": "4.2",
+              "headings": [
+                "Sàn"
+              ],
+              "title": "Cầu thang bộ",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chiều cao hoàn thiện bậc Max 180 mm\n- Chiều rộng hoàn thiện bậc Min 250 mm.\n- Bậc thang xây gạch đặc.\n- Trát vữa bậc thang vữa mác 75, dày 15 mm, không trát đáy bản thang.\n- Lưu ý vị trí tường cạnh bên bản thang, xây bằng mép dầm, tránh lồi gờ dầm.",
+              "requirementLines": [
+                "Chiều cao hoàn thiện bậc Max 180 mm",
+                "Chiều rộng hoàn thiện bậc Min 250 mm.",
+                "Bậc thang xây gạch đặc.",
+                "Trát vữa bậc thang vữa mác 75, dày 15 mm, không trát đáy bản thang.",
+                "Lưu ý vị trí tường cạnh bên bản thang, xây bằng mép dầm, tránh lồi gờ dầm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 74
+            },
+            {
+              "id": "97f54956-067e-4244-b611-eb09d256eb30",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.2.4",
+              "parentCode": "4.2",
+              "headings": [
+                "Sàn"
+              ],
+              "title": "Sàn ban công, lô gia, sân thượng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Lớp hoàn thiện theo phân cấp sao.\n- Vữa M75 dày min 20 mm, tạo dốc về hướng phễu thu, dốc min 1.5%\n- Lớp chống thấm gốc xi măng 2 thành phần, quét cuộn lên kicker/tường/ngạch cửa.\n- Lớp kết cấu sàn.",
+              "requirementLines": [
+                "Lớp hoàn thiện theo phân cấp sao.",
+                "Vữa M75 dày min 20 mm, tạo dốc về hướng phễu thu, dốc min 1.5%",
+                "Lớp chống thấm gốc xi măng 2 thành phần, quét cuộn lên kicker/tường/ngạch cửa.",
+                "Lớp kết cấu sàn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 75
+            },
+            {
+              "id": "cbf1d41e-8f5b-4390-baa8-abeb57854fb3",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.5",
+              "headings": [
+                "Sàn",
+                "Sàn mái"
+              ],
+              "title": "Sàn mái BTCT_mái bằng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Lớp hoàn thiện: không thực hiện.\n- Bê tông đá mi M200, thép D4@250-300, dày min 40 mm.\n- Đánh dốc về rãnh mương/ phễu thu, dốc min 1.5%\n- Lớp chống thấm gốc PU, cuộn lên vách 300 mm.\n- Lớp kết cấu sàn.",
+              "requirementLines": [
+                "Lớp hoàn thiện: không thực hiện.",
+                "Bê tông đá mi M200, thép D4@250-300, dày min 40 mm.",
+                "Đánh dốc về rãnh mương/ phễu thu, dốc min 1.5%",
+                "Lớp chống thấm gốc PU, cuộn lên vách 300 mm.",
+                "Lớp kết cấu sàn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 77
+            },
+            {
+              "id": "011e40c9-4d9d-47b3-a0fc-c2a7e32f9fd2",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.5",
+              "headings": [
+                "Sàn",
+                "Sàn mái"
+              ],
+              "title": "Sàn mái BTCT_mái dốc lợp ngói (hạn chế sử dụng)",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Lớp ngói, theo PD CĐT.\n- Hệ xà gồ thép theo PD CĐT.\n- Kêt cấu mái (bê tông cốt thép không chống thấm, không tô vữa mặt trên, mặt dưới)",
+              "requirementLines": [
+                "Lớp ngói, theo PD CĐT.",
+                "Hệ xà gồ thép theo PD CĐT.",
+                "Kêt cấu mái (bê tông cốt thép không chống thấm, không tô vữa mặt trên, mặt dưới)"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 78
+            },
+            {
+              "id": "4130d618-1d49-4ee5-8dfe-ed90919d0135",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.5",
+              "headings": [
+                "Sàn",
+                "Sàn mái"
+              ],
+              "title": "Sàn mái Khung nhôm_mái dốc lợp ngói (ưu tiên sử dụng)",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Ngói sóng SCG (10v/m²)/hoặc tương đương\n- Hệ vì kèo Viettruss G550/Multitruss/hoặc tương đương.",
+              "requirementLines": [
+                "Ngói sóng SCG (10v/m²)/hoặc tương đương",
+                "Hệ vì kèo Viettruss G550/Multitruss/hoặc tương đương."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 79
+            },
+            {
+              "id": "de463bd4-4894-4ec5-86f9-7862a3217b50",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.5",
+              "headings": [
+                "Sàn",
+                "Sàn mái"
+              ],
+              "title": "Sàn mái BTCT_mái dốc dán bitum",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Lớp Bitum theo PD CĐT.\n- Lớp keo chuyên dụng theo NSX.\n- Lớp vữa tạo phẳng M75 dày 20 mm.\n- Kết cấu mái.",
+              "requirementLines": [
+                "Lớp Bitum theo PD CĐT.",
+                "Lớp keo chuyên dụng theo NSX.",
+                "Lớp vữa tạo phẳng M75 dày 20 mm.",
+                "Kết cấu mái."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 80
+            },
+            {
+              "id": "3d1390db-0b49-479f-bd96-ebbab3491a52",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.6",
+              "headings": [
+                "Sàn",
+                "Sê nô"
+              ],
+              "title": "Sê nô ống thu nước đứng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Thành seno trát vữa M75 dày min 15 mm.\n- Đáy seno trát vữa M75 dày min 30 mm, đánh dốc về hướng phễu thu, dốc min 2%.\n- Góc thành đáy sê nô vuốt tròn D30.\n- Lớp chống thấm gốc PU.\n- Kết cấu seno - chi tiết xem BVKC",
+              "requirementLines": [
+                "Thành seno trát vữa M75 dày min 15 mm.",
+                "Đáy seno trát vữa M75 dày min 30 mm, đánh dốc về hướng phễu thu, dốc min 2%.",
+                "Góc thành đáy sê nô vuốt tròn D30.",
+                "Lớp chống thấm gốc PU.",
+                "Kết cấu seno - chi tiết xem BVKC"
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 82
+            },
+            {
+              "id": "21a62808-309c-4384-8d20-c28535970779",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.2.6",
+              "headings": [
+                "Sàn",
+                "Sê nô"
+              ],
+              "title": "Sê nô ống thu nước ngang",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Thành seno trát vữa M75 dày min 15 mm.\n- Đáy seno trát vữa M75 dày min 30 mm, đánh dốc về hướng phễu thu, dốc min 2%.\n- Lớp chống thấm gốc PU.\n- Kết cấu seno - chi tiết xem BVKC.",
+              "requirementLines": [
+                "Thành seno trát vữa M75 dày min 15 mm.",
+                "Đáy seno trát vữa M75 dày min 30 mm, đánh dốc về hướng phễu thu, dốc min 2%.",
+                "Lớp chống thấm gốc PU.",
+                "Kết cấu seno - chi tiết xem BVKC."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 83
+            },
+            {
+              "id": "8ecb07b3-5eea-4016-8fb1-fd385be1c4af",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.3.1",
+              "parentCode": "4.3",
+              "headings": [
+                "Cấu tạo khe hở giữa 2 nhà"
+              ],
+              "title": "Khe hở tại mặt đứng giữa 2 nhà",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Khe rộng 10mm.\n- Trám khe, hoàn thiện cùng loại với mặt đứng.\n- Vuốt lõm tạo ron âm 10mm.",
+              "requirementLines": [
+                "Khe rộng 10mm.",
+                "Trám khe, hoàn thiện cùng loại với mặt đứng.",
+                "Vuốt lõm tạo ron âm 10mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 85
+            },
+            {
+              "id": "224a0441-59c5-4498-9c45-914e5857f865",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.3.2",
+              "headings": [
+                "Cấu tạo khe hở giữa 2 nhà",
+                "Khe hở trên mái"
+              ],
+              "title": "Khe hở mái 2 nhà giáp nhau - mái bằng nhau",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kicker cao min 300 mm, chống thấm cuộn lên 300mm.\n- Đỉnh phủ bằng đan BTCT dày min 70 mm, trát vữa M75 hoàn thiện tạo dốc tránh đọng nước.\n- Xử lý khe hở bằng chất trám khe co giãn.",
+              "requirementLines": [
+                "Kicker cao min 300 mm, chống thấm cuộn lên 300mm.",
+                "Đỉnh phủ bằng đan BTCT dày min 70 mm, trát vữa M75 hoàn thiện tạo dốc tránh đọng nước.",
+                "Xử lý khe hở bằng chất trám khe co giãn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 87
+            },
+            {
+              "id": "e00ac1a2-3171-4423-8f2e-ab5901f88ad2",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.3.2",
+              "headings": [
+                "Cấu tạo khe hở giữa 2 nhà",
+                "Khe hở trên mái"
+              ],
+              "title": "Khe hở mái 2 nhà giáp nhau - mái chênh nhau H= 100-300mm",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kicker cao min 300 mm, chống thấm cuộn lên 300mm.\n- Đỉnh phủ bằng đan BTCT dày min 70mm, trát vữa M75 hoàn thiện tạo dốc tránh đọng nước.\n- Xử lý khe hở bằng chất trám khe co giãn.",
+              "requirementLines": [
+                "Kicker cao min 300 mm, chống thấm cuộn lên 300mm.",
+                "Đỉnh phủ bằng đan BTCT dày min 70mm, trát vữa M75 hoàn thiện tạo dốc tránh đọng nước.",
+                "Xử lý khe hở bằng chất trám khe co giãn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 88
+            },
+            {
+              "id": "78970077-8caa-4966-a190-5c710cac42c2",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.3.2",
+              "headings": [
+                "Cấu tạo khe hở giữa 2 nhà",
+                "Khe hở trên mái"
+              ],
+              "title": "Khe hở mái 2 nhà giáp nhau - mái chênh nhau H= 370-800mm",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kicker cao min 300 mm, chống thấm cuộn lên 300mm.\n- Đỉnh phủ bằng đan BTCT dày min 70mm, trát vữa M75 hoàn thiện tạo dốc tránh đọng nước.\n- Xử lý khe hở bằng chất trám khe co giãn.",
+              "requirementLines": [
+                "Kicker cao min 300 mm, chống thấm cuộn lên 300mm.",
+                "Đỉnh phủ bằng đan BTCT dày min 70mm, trát vữa M75 hoàn thiện tạo dốc tránh đọng nước.",
+                "Xử lý khe hở bằng chất trám khe co giãn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 89
+            },
+            {
+              "id": "a7cf2d9d-6b0f-41d1-b563-ec5f521e42d5",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.3.3",
+              "headings": [
+                "Cấu tạo khe hở giữa 2 nhà",
+                "Vị trí mái ngói giáp lai tường"
+              ],
+              "title": "Mái ngói giáp lai tường",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Bắn tole mạ kẽm dày 0.4mm bằng đinh / vít.\n- Quét lớp chống thống gốc xi măng 2 thành phần.\n- Trám khe bằng vữa M75.\n- Úp viên ngói góc đảm bảo thẩm mỹ.",
+              "requirementLines": [
+                "Bắn tole mạ kẽm dày 0.4mm bằng đinh / vít.",
+                "Quét lớp chống thống gốc xi măng 2 thành phần.",
+                "Trám khe bằng vữa M75.",
+                "Úp viên ngói góc đảm bảo thẩm mỹ."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 91
+            },
+            {
+              "id": "da3d4b58-315a-4eee-8d87-0bf1207db7ff",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.3.3",
+              "headings": [
+                "Cấu tạo khe hở giữa 2 nhà",
+                "Vị trí mái ngói giáp lai tường"
+              ],
+              "title": "Mái ngói giáp lai tường (Vị trí 2 nhà giáp nhau chênh cote)",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Bắn tole mạ kẽm dày 0,4mm bằng đinh / vít.\n- Quét lớp chống thống gốc xi măng 2 thành phần.\n- Trám khe bằng vữa M75.\n- Úp viên ngói góc đảm bảo thẩm mỹ.",
+              "requirementLines": [
+                "Bắn tole mạ kẽm dày 0,4mm bằng đinh / vít.",
+                "Quét lớp chống thống gốc xi măng 2 thành phần.",
+                "Trám khe bằng vữa M75.",
+                "Úp viên ngói góc đảm bảo thẩm mỹ."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 92
+            },
+            {
+              "id": "1a49ef3f-0fa0-42f2-9bbf-a3f6d62c47f4",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.4.1",
+              "parentCode": "4.4",
+              "headings": [
+                "Chống mối"
+              ],
+              "title": "Giai đoạn thi công",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Không xử lý chống mối trong giai đoạn thi công.",
+              "requirementLines": [
+                "Không xử lý chống mối trong giai đoạn thi công."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 94
+            },
+            {
+              "id": "cab5899f-5072-44e4-be49-1f839ce1cc9a",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.4.3",
+              "parentCode": "4.4",
+              "headings": [
+                "Chống mối"
+              ],
+              "title": "Đối với những hạng mục vận hành của CĐT",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Bổ sung quy định hạng mục kiểm tra và chống mối định kì.",
+              "requirementLines": [
+                "Bổ sung quy định hạng mục kiểm tra và chống mối định kì."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 95
+            },
+            {
+              "id": "2e91e76b-23d2-450f-9aae-0d556b88bedb",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.4.2",
+              "parentCode": "4.4",
+              "headings": [
+                "Chống mối"
+              ],
+              "title": "Đối sản phẩm bàn giao khách hàng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Khuyến cáo thực hiện chống mối trước khi thi công nội thất và xử lý định kì 06 tháng/lần.",
+              "requirementLines": [
+                "Khuyến cáo thực hiện chống mối trước khi thi công nội thất và xử lý định kì 06 tháng/lần."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 96
+            },
+            {
+              "id": "b0dfc7b4-6a76-4ae8-8de1-5964692c356b",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.5.1",
+              "parentCode": "4.5",
+              "headings": [
+                "Chống thấm"
+              ],
+              "title": "Chân tường rào",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Không chống thấm (ưu tiên sơn nước màu tối để chống ngả màu do thẩm thấu nước chân tường).",
+              "requirementLines": [
+                "Không chống thấm (ưu tiên sơn nước màu tối để chống ngả màu do thẩm thấu nước chân tường)."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 98
+            },
+            {
+              "id": "ebb6bab6-8475-4b9f-b5c3-67f04e13350e",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.5.2",
+              "parentCode": "4.5",
+              "headings": [
+                "Chống thấm"
+              ],
+              "title": "Bể nước ngầm",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Ốp gạch Ceramic 300x600 cao tới đỉnh vách bể.\n- Trát vữa M75 đáy dày min 30 mm, vách dày min 15 mm.\n- Chống thấm gốc xi măng 2 thành phần. Lớp phủ chống thấm không chứa Clorua và các chất ăn mòn khác & kháng hóa chất.\n- Nắp bể ngầm thấp hơn cote sân 100 mm (min).\n- Vát góc đáy bể D150 mm.\n- Kết cấu bể, xem BVKC.",
+              "requirementLines": [
+                "Ốp gạch Ceramic 300x600 cao tới đỉnh vách bể.",
+                "Trát vữa M75 đáy dày min 30 mm, vách dày min 15 mm.",
+                "Chống thấm gốc xi măng 2 thành phần. Lớp phủ chống thấm không chứa Clorua và các chất ăn mòn khác & kháng hóa chất.",
+                "Nắp bể ngầm thấp hơn cote sân 100 mm (min).",
+                "Vát góc đáy bể D150 mm.",
+                "Kết cấu bể, xem BVKC."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 99
+            },
+            {
+              "id": "ffff322e-0edc-479e-acb7-3344150e1517",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.5.3",
+              "parentCode": "4.5",
+              "headings": [
+                "Chống thấm"
+              ],
+              "title": "Ban công, lô gia, sân thượng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc xi măng 2 thành phần.\n- Quét 2 lớp cuộn lên chân tường cao 300 mm.",
+              "requirementLines": [
+                "Chống thấm gốc xi măng 2 thành phần.",
+                "Quét 2 lớp cuộn lên chân tường cao 300 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 100
+            },
+            {
+              "id": "35fea8d8-51f2-4fa7-8862-b55904f79062",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.4",
+              "headings": [
+                "Chống thấm",
+                "Bồn hoa"
+              ],
+              "title": "Bồn hoa các tầng lầu",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc PU.\n- Chống thấm đáy cuộn lên tới đỉnh thành bồn.",
+              "requirementLines": [
+                "Chống thấm gốc PU.",
+                "Chống thấm đáy cuộn lên tới đỉnh thành bồn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 102
+            },
+            {
+              "id": "95c1d552-988e-4fb1-bd57-8f697ee21904",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.4",
+              "headings": [
+                "Chống thấm",
+                "Bồn hoa"
+              ],
+              "title": "Bồn hoa tầng 1 (âm đất)",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc xi măng 2 thành phần.\n- Chống thấm đáy cuộn lên tới đỉnh thành bồn.",
+              "requirementLines": [
+                "Chống thấm gốc xi măng 2 thành phần.",
+                "Chống thấm đáy cuộn lên tới đỉnh thành bồn."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 103
+            },
+            {
+              "id": "85b1f5ce-5f8c-4ee8-9fc6-13f22942d94f",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.5",
+              "headings": [
+                "Chống thấm",
+                "Mái"
+              ],
+              "title": "Sàn mái BTCT_mái bằng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc PU.\n- Chống thấm đáy cuộn lên tường 300 mm.",
+              "requirementLines": [
+                "Chống thấm gốc PU.",
+                "Chống thấm đáy cuộn lên tường 300 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 105
+            },
+            {
+              "id": "cd9017f2-5883-4bfc-95ea-ff2ce09c2b85",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.5",
+              "headings": [
+                "Chống thấm",
+                "Mái"
+              ],
+              "title": "Sàn mái BTCT_mái dốc lợp ngói",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Không chống thấm.",
+              "requirementLines": [
+                "Không chống thấm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 106
+            },
+            {
+              "id": "947f006b-3807-4248-a887-5f56a40174d2",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.5",
+              "headings": [
+                "Chống thấm",
+                "Mái"
+              ],
+              "title": "Sàn mái BTCT_mái dốc dán bitum",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "Không chống thấm.",
+              "requirementLines": [
+                "Không chống thấm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 107
+            },
+            {
+              "id": "cd97c644-ccd5-4460-ba41-12cf8b4de4d3",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.5.6",
+              "parentCode": "4.5",
+              "headings": [
+                "Chống thấm"
+              ],
+              "title": "Sê nô",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc PU.\n- Chống thấm đáy, thành seno cuộn lên tới đỉnh sê nô.",
+              "requirementLines": [
+                "Chống thấm gốc PU.",
+                "Chống thấm đáy, thành seno cuộn lên tới đỉnh sê nô."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 108
+            },
+            {
+              "id": "da485233-86a2-4078-b8eb-3450e07e3c61",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.7",
+              "headings": [
+                "Chống thấm",
+                "Hồ bơi"
+              ],
+              "title": "Hồ bơi âm đất",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc Xi măng 2 thành phần, vị tri sàn, vách (cuộn lên tới đỉnh vách).\n- Lớp hoàn thiện theo PD CĐT.",
+              "requirementLines": [
+                "Chống thấm gốc Xi măng 2 thành phần, vị tri sàn, vách (cuộn lên tới đỉnh vách).",
+                "Lớp hoàn thiện theo PD CĐT."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 110
+            },
+            {
+              "id": "16e0c7a9-3fa8-4ee5-b689-e9ccdd99e21c",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": null,
+              "parentCode": "4.5.7",
+              "headings": [
+                "Chống thấm",
+                "Hồ bơi"
+              ],
+              "title": "Hồ bơi trên mái, sân thượng",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc Xi măng 2 thành phần, vị tri sàn, vách (cuộn lên tới đỉnh vách)\n- Lớp hoàn thiện theo PD CĐT.",
+              "requirementLines": [
+                "Chống thấm gốc Xi măng 2 thành phần, vị tri sàn, vách (cuộn lên tới đỉnh vách)",
+                "Lớp hoàn thiện theo PD CĐT."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 111
+            },
+            {
+              "id": "3858bddd-56f8-42b5-b8d8-28b9ec27fc4e",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "4.5.8",
+              "parentCode": "4.5",
+              "headings": [
+                "Chống thấm"
+              ],
+              "title": "Bể kỹ thuật",
+              "category": "structure",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chống thấm gốc xi măng 2 thành phần.\n- Trát sàn & vách bảo vệ lớp chống thấm M75, không hoàn thiện.",
+              "requirementLines": [
+                "Chống thấm gốc xi măng 2 thành phần.",
+                "Trát sàn & vách bảo vệ lớp chống thấm M75, không hoàn thiện."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 112
+            }
+          ],
+          "ruleCount": 42
+        },
+        {
+          "code": "5",
+          "category": "finishing",
+          "title": "CHI TIẾT HOÀN THIỆN ĐIỂN HÌNH",
+          "rules": [
+            {
+              "id": "ada03483-acf2-4bf1-9981-fa716d301190",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.1.1",
+              "parentCode": "5.1",
+              "headings": [
+                "Trần ngoài nhà"
+              ],
+              "title": "Trần thạch cao/tấm silicate",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Vùng biển (Phan Thiết, Hồ Tràm,..): Tấm trần Silicat dày 6mm Hoặc Tấm trần thạch cao chống ẩm 9mm.\n\n- Vùng đồng bằng (Hồ Chí Minh, Đồng Nai,..): Tấm trần thạch cao chống ẩm 9mm.\n\n- Hệ khung Alpha Vĩnh Tường 4000 / tương đương.\n- Bước khung 406 x 1000mm.\n- Ty treo D4~8mm.",
+              "requirementLines": [
+                "Vùng biển (Phan Thiết, Hồ Tràm,..): Tấm trần Silicat dày 6mm Hoặc Tấm trần thạch cao chống ẩm 9mm.",
+                "Vùng đồng bằng (Hồ Chí Minh, Đồng Nai,..): Tấm trần thạch cao chống ẩm 9mm.",
+                "Hệ khung Alpha Vĩnh Tường 4000 / tương đương.",
+                "Bước khung 406 x 1000mm.",
+                "Ty treo D4~8mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 115
+            },
+            {
+              "id": "a05621c3-d70d-4b5b-850f-bf8d2b45eb96",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.1.2",
+              "parentCode": "5.1",
+              "headings": [
+                "Trần ngoài nhà"
+              ],
+              "title": "Trần bê tông",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Trát vữa M75 dày 15 mm.\n- Sơn nước ngoại thất.",
+              "requirementLines": [
+                "Trát vữa M75 dày 15 mm.",
+                "Sơn nước ngoại thất."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 116
+            },
+            {
+              "id": "4718aa57-3bf3-4c11-b852-1dcc69172852",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.2.1",
+              "parentCode": "5.2",
+              "headings": [
+                "Chân tường ngoài nhà"
+              ],
+              "title": "Chân tường ngoài nhà",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chân tường sơn nước theo thiết kế.\n- Hoàn thiện chân tường âm xuống FFL sân 5cm để tránh hở chân tường.\n- Có xử lý Chi tiết chỉ ngắt chân tường theo thiết kế.",
+              "requirementLines": [
+                "Chân tường sơn nước theo thiết kế.",
+                "Hoàn thiện chân tường âm xuống FFL sân 5cm để tránh hở chân tường.",
+                "Có xử lý Chi tiết chỉ ngắt chân tường theo thiết kế."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 118
+            },
+            {
+              "id": "2e48ca68-592b-4e55-a341-6459799749a8",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.3.1",
+              "parentCode": "5.3",
+              "headings": [
+                "Ban công, lô gia, sân thượng"
+              ],
+              "title": "Mặt cắt điển hỉnh Ban công, lô gia, sân thượng",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chênh cao ngạch cửa Min 20 mm.\n- Độ dốc ban công / sân thượng / lô gia : i ≥ 1.5%\n- Đối với ban công có diện tích ≥ 6m² bố trí khe thoát tràn (hình thức xử lý khe thoát tràn theo ý tưởng thiết kế kiến trúc), đáy khe thoát tràn phải thấp hơn FFL trong nhà tối thiểu 15 mm.\n- Không được dùng ống thoát tràn nổi bên ngoài gây mất thẩm mỹ.",
+              "requirementLines": [
+                "Chênh cao ngạch cửa Min 20 mm.",
+                "Độ dốc ban công / sân thượng / lô gia : i ≥ 1.5%",
+                "Đối với ban công có diện tích ≥ 6m² bố trí khe thoát tràn (hình thức xử lý khe thoát tràn theo ý tưởng thiết kế kiến trúc), đáy khe thoát tràn phải thấp hơn FFL trong nhà tối thiểu 15 mm.",
+                "Không được dùng ống thoát tràn nổi bên ngoài gây mất thẩm mỹ."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 120
+            },
+            {
+              "id": "f4a695ba-e1bb-4735-8f0e-ec9cb96e02e8",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.3.2",
+              "parentCode": "5.3",
+              "headings": [
+                "Ban công, lô gia, sân thượng"
+              ],
+              "title": "Ngạch cửa nhôm kính_cửa lùa",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chênh cao ngạch cửa Min 20 mm.\n- Độ dốc ban công / sân thượng / lô gia : i ≥ 1.5%\n- Ốp đá dày 18 ± 2 mm.\n- Cừa lùi vào so với mép tường ngoài 50 mm.",
+              "requirementLines": [
+                "Chênh cao ngạch cửa Min 20 mm.",
+                "Độ dốc ban công / sân thượng / lô gia : i ≥ 1.5%",
+                "Ốp đá dày 18 ± 2 mm.",
+                "Cừa lùi vào so với mép tường ngoài 50 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 121
+            },
+            {
+              "id": "9e7b5094-2743-44dc-acca-122f30b8defa",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.3.3",
+              "parentCode": "5.3",
+              "headings": [
+                "Ban công, lô gia, sân thượng"
+              ],
+              "title": "Ngạch cửa nhôm kính_cửa mở",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chênh cao ngạch cửa Min 20 mm.\n- Độ dốc ban công / sân thượng / lô gia : I ≥ 1.5%\n- Ốp đá dày 18 ± 2 mm.\n- Cừa lùi vào so với mép tường ngoài 50 mm.",
+              "requirementLines": [
+                "Chênh cao ngạch cửa Min 20 mm.",
+                "Độ dốc ban công / sân thượng / lô gia : I ≥ 1.5%",
+                "Ốp đá dày 18 ± 2 mm.",
+                "Cừa lùi vào so với mép tường ngoài 50 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 122
+            },
+            {
+              "id": "8adc4d22-8151-4fc6-b9db-a290f45a0011",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.3.3",
+              "parentCode": "5.3",
+              "headings": [
+                "Ban công, lô gia, sân thượng"
+              ],
+              "title": "Ngạch cửa gỗ_cửa mở",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Chênh cao ngạch cửa Min 20 mm.\n- Độ dốc ban công / sân thượng / lô gia : I ≥ 1.5%\n- Ốp đá dày 18 ± 2 mm\n- Chân cửa chắn được nước mưa tạt vào trong nhà.\n- Cừa lùi vào so với mép tường ngoài 50 mm.",
+              "requirementLines": [
+                "Chênh cao ngạch cửa Min 20 mm.",
+                "Độ dốc ban công / sân thượng / lô gia : I ≥ 1.5%",
+                "Ốp đá dày 18 ± 2 mm",
+                "Chân cửa chắn được nước mưa tạt vào trong nhà.",
+                "Cừa lùi vào so với mép tường ngoài 50 mm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 123
+            },
+            {
+              "id": "35fca1bf-3df7-4d1f-8f4a-56ddfc83a0c4",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.4.1",
+              "parentCode": "5.4",
+              "headings": [
+                "Trụ đấu nối điện nước-hộp thư-tủ rác ngoài nhà (cổng/hàng rào)"
+              ],
+              "title": "Trụ đấu nối điện nước-hộp thư-tủ rác_dự án Nghỉ dưỡng (HOS)",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kích thước (DxRxC) tủ điện nước: Min 400 x 300 x 780 mm.\n- Kích thước (DxRxC) tủ rác: Min 500 x 400 x 780 mm.\nBên ngoài:\n- Sơn bả hoàn thiện theo TK.\n- Cửa đồng hồ điện-nước kt 350 x 780 mm, khung thép mạ kẽm 30 x 30 x 1.8 mm, kính cường lực 5 mm, sơn tĩnh điện màu theo thiết kế.\n- Phòng rác: dùng cửa hàng rào ngoài.\n\nBên trong:\n- Trát vữa dày 15 mm không hoàn thiện.\n- Sàn tủ rác cán vữa dày Min 20 mm, dốc về phễu thu, không chống thấm.",
+              "requirementLines": [
+                "Kích thước (DxRxC) tủ điện nước: Min 400 x 300 x 780 mm.",
+                "Kích thước (DxRxC) tủ rác: Min 500 x 400 x 780 mm.",
+                "Bên ngoài:",
+                "Sơn bả hoàn thiện theo TK.",
+                "Cửa đồng hồ điện-nước kt 350 x 780 mm, khung thép mạ kẽm 30 x 30 x 1.8 mm, kính cường lực 5 mm, sơn tĩnh điện màu theo thiết kế.",
+                "Phòng rác: dùng cửa hàng rào ngoài.",
+                "Bên trong:",
+                "Trát vữa dày 15 mm không hoàn thiện.",
+                "Sàn tủ rác cán vữa dày Min 20 mm, dốc về phễu thu, không chống thấm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 125
+            },
+            {
+              "id": "2bbfafec-bcc9-4504-a7d1-a58d3ab86326",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.4.2",
+              "parentCode": "5.4",
+              "headings": [
+                "Trụ đấu nối điện nước-hộp thư-tủ rác ngoài nhà (cổng/hàng rào)"
+              ],
+              "title": "Trụ đấu nối điện nước-hộp thư-tủ rác_dự án Khu đô thị ở (RES)",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Kích thước tủ điện nước (DxRxC): thông thủy Min 400 x 300 x 500 mm.\n- Kích thước (DxRxC) tủ rác: thông thủy Min 500 x 400 x 780 mm.\nBên ngoài:\n- Sơn bả hoàn thiện theo TK.\n- Cửa đồng hồ điện-nước: khung sắt hộp mạ kẽm 30 x 30 x 1.8mm, kính cường lực 5mm.\n- Hộp thư, cửa lấy thư: thép tấm dày 1.2 mm, khung sắt hộp 30 x 30 x 1.8mm\n- Cửa phòng rác: khung sắt hộp mạ kẽm 30 x 30 x 1.8mm, louver lá sách dày 1.2mm\n- Sơn tĩnh điện màu theo thiết kế.\n\nBên trong:\n- Trát vữa dày 15mm không hoàn thiện.\n- Sàn tủ rác cán vữa dày Min 20 mm, dốc về phễu thu, không chống thấm.",
+              "requirementLines": [
+                "Kích thước tủ điện nước (DxRxC): thông thủy Min 400 x 300 x 500 mm.",
+                "Kích thước (DxRxC) tủ rác: thông thủy Min 500 x 400 x 780 mm.",
+                "Bên ngoài:",
+                "Sơn bả hoàn thiện theo TK.",
+                "Cửa đồng hồ điện-nước: khung sắt hộp mạ kẽm 30 x 30 x 1.8mm, kính cường lực 5mm.",
+                "Hộp thư, cửa lấy thư: thép tấm dày 1.2 mm, khung sắt hộp 30 x 30 x 1.8mm",
+                "Cửa phòng rác: khung sắt hộp mạ kẽm 30 x 30 x 1.8mm, louver lá sách dày 1.2mm",
+                "Sơn tĩnh điện màu theo thiết kế.",
+                "Bên trong:",
+                "Trát vữa dày 15mm không hoàn thiện.",
+                "Sàn tủ rác cán vữa dày Min 20 mm, dốc về phễu thu, không chống thấm."
+              ],
+              "houseTypes": [
+                "shophouse",
+                "townhouse",
+                "semi-villa",
+                "single-villa",
+                "shop-villa"
+              ],
+              "isActive": true,
+              "sourceRow": 126
+            },
+            {
+              "id": "53975e9f-94c6-4ad7-96fd-aa11ad5240da",
+              "ruleSetId": "2d61f6f9-20a8-4c92-bf1b-d436bc6ca24d",
+              "code": "5.4.3",
+              "parentCode": "5.4",
+              "headings": [
+                "Trụ đấu nối điện nước-hộp thư-tủ rác ngoài nhà (cổng/hàng rào)"
+              ],
+              "title": "Cửa tủ đồng hồ điện Shophouse",
+              "category": "finishing",
+              "checkType": null,
+              "operator": null,
+              "value": null,
+              "requirement": "- Cửa đồng hồ điện kích thước 280 x 480 mm.\n- Cửa thép khung sắt hộp 30 x 30 x 1.8mm mạ kẽm + kính 5 mm cường lực.\n- Sơn tĩnh điện màu theo thiết kế.",
+              "requirementLines": [
+                "Cửa đồng hồ điện kích thước 280 x 480 mm.",
+                "Cửa thép khung sắt hộp 30 x 30 x 1.8mm mạ kẽm + kính 5 mm cường lực.",
+                "Sơn tĩnh điện màu theo thiết kế."
+              ],
+              "houseTypes": [
+                "shophouse"
+              ],
+              "isActive": true,
+              "sourceRow": 127
+            }
+          ],
+          "ruleCount": 10
+        }
+      ],
+      "warnings": [
+        {
+          "sourceRow": 18,
+          "code": "AMBIGUOUS_HOUSE_TYPE",
+          "message": "\"Villa\" đứng riêng — đã hiểu là Single Villa, cần xác nhận."
+        },
+        {
+          "sourceRow": 21,
+          "code": "UNKNOWN_HOUSE_TYPE",
+          "message": "\"Shop Semi Villa\" không thuộc 5 loại nhà đã chốt — bỏ qua."
+        },
+        {
+          "sourceRow": 27,
+          "code": "UNKNOWN_HOUSE_TYPE",
+          "message": "\"Shop Semi Villa\" không thuộc 5 loại nhà đã chốt — bỏ qua."
+        },
+        {
+          "sourceRow": 30,
+          "code": "UNKNOWN_HOUSE_TYPE",
+          "message": "\"Shop Semi Villa\" không thuộc 5 loại nhà đã chốt — bỏ qua."
+        },
+        {
+          "sourceRow": 45,
+          "code": "UNKNOWN_HOUSE_TYPE",
+          "message": "\"Shop Semi Villa\" không thuộc 5 loại nhà đã chốt — bỏ qua."
+        },
+        {
+          "sourceRow": 96,
+          "code": "CODE_OUT_OF_ORDER",
+          "message": "Mã \"4.4.2\" đứng sau \"4.4.3\" — sai thứ tự."
+        },
+        {
+          "sourceRow": 123,
+          "code": "DUPLICATE_CODE",
+          "message": "Mã \"5.3.3\" trùng với dòng 122."
+        }
+      ]
+    }
+  ]
+}

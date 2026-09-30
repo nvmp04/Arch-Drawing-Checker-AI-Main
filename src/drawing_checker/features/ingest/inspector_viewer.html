@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ingest Inspector</title>
+<style>
+  :root {
+    --bg: #f4f4f2; --panel: #ffffff; --line: #deded9; --text: #1d1d1b; --muted: #6b6b66;
+    --accent: #2f6fdb; --hit: #ffd400; --canvas: #e9e9e6;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { display: grid; grid-template-rows: auto 1fr; grid-template-columns: 230px 1fr 300px; height: 100vh; }
+  header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 14px; margin: 0 8px 0 0; }
+  header .file { color: var(--muted); }
+  header label { display: inline-flex; gap: 4px; align-items: center; white-space: nowrap; }
+  header input[type=search] { width: 200px; }
+  button, select, input[type=search] { font: inherit; padding: 3px 8px; border: 1px solid var(--line);
+    border-radius: 4px; background: var(--panel); color: var(--text); }
+  button:hover { border-color: var(--accent); }
+  aside { overflow: auto; background: var(--panel); }
+  #pages { border-right: 1px solid var(--line); }
+  #side { border-left: 1px solid var(--line); padding: 10px; display: flex; flex-direction: column; gap: 12px; }
+  .pg { padding: 6px 10px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .pg:hover { background: #f0f4fc; }
+  .pg.active { background: #e2ebfb; box-shadow: inset 3px 0 var(--accent); }
+  .pg b { font-variant-numeric: tabular-nums; }
+  .pg .t { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg .c { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  main { position: relative; overflow: hidden; background: var(--canvas); cursor: grab; }
+  main.drag { cursor: grabbing; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #loading { position: absolute; top: 10px; left: 10px; background: var(--panel); padding: 4px 10px;
+    border-radius: 4px; border: 1px solid var(--line); display: none; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 6px; }
+  table.kv { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  table.kv td { padding: 2px 0; border-bottom: 1px dotted var(--line); }
+  table.kv td:last-child { text-align: right; }
+  #info { min-height: 110px; background: #fafaf8; border: 1px solid var(--line); border-radius: 4px; padding: 8px;
+    word-break: break-word; }
+  #info .txt { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  #info .m { color: var(--muted); font-size: 12px; }
+  #layerTools { display: flex; gap: 6px; margin-bottom: 6px; }
+  #layerTools input { flex: 1; min-width: 0; }
+  #layers { max-height: 45vh; overflow: auto; border: 1px solid var(--line); border-radius: 4px; }
+  .ly { display: grid; grid-template-columns: 16px 12px 1fr auto; gap: 6px; align-items: center;
+    padding: 3px 6px; border-bottom: 1px solid var(--line); font-size: 12px; }
+  .ly:hover { background: #f0f4fc; }
+  .ly .sw { width: 12px; height: 12px; border-radius: 2px; }
+  .ly .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+  .ly .ct { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .ly.solo { background: #fff6cc; }
+  #hits { font-size: 12px; color: var(--muted); }
+  .hint { color: var(--muted); font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1><a href="../index.html" title="Danh sách lần chạy" style="color:inherit;text-decoration:none">◂</a> Ingest Inspector</h1><span class="file" id="file"></span>
+  <button id="prev" title="Trang trước (←)">◀</button>
+  <select id="pageSel"></select>
+  <button id="next" title="Trang sau (→)">▶</button>
+  <button id="fit" title="Vừa khung (F)">Vừa khung</button>
+  <label><input type="checkbox" id="showBg" checked> Ảnh nền</label>
+  <label><input type="checkbox" id="showText" checked> Khung chữ</label>
+  <label><input type="checkbox" id="showStroke" checked> Nét</label>
+  <label><input type="checkbox" id="showFill" checked> Vùng tô</label>
+  <label>Màu <select id="colorMode"><option value="layer">theo layer</option><option value="flat">một màu</option></select></label>
+  <label>Mờ nền <input type="range" id="bgAlpha" min="0" max="100" value="45"></label>
+  <input type="search" id="search" placeholder="Tìm chữ… (Enter: kế tiếp)">
+  <span id="hits"></span>
+</header>
+
+<aside id="pages"></aside>
+
+<main id="stage">
+  <canvas id="cv"></canvas>
+  <div id="loading">Đang nạp…</div>
+</main>
+
+<aside id="side">
+  <section>
+    <h2>Chữ dưới con trỏ</h2>
+    <div id="info"><span class="m">Rê chuột lên khung chữ. Lăn chuột: zoom · kéo: di chuyển · F: vừa khung.</span></div>
+  </section>
+  <section>
+    <h2>Thống kê trang</h2>
+    <table class="kv" id="stats"></table>
+  </section>
+  <section>
+    <h2>Layer CAD</h2>
+    <div id="layerTools">
+      <input type="search" id="layerFilter" placeholder="Lọc layer…">
+      <button id="allOn" title="Bật tất cả">Tất cả</button>
+      <button id="allOff" title="Tắt tất cả">Không</button>
+    </div>
+    <div id="layers"></div>
+    <div class="hint">Bấm tên layer để tô nổi (solo), bấm lại để bỏ. Số: chữ / nét.</div>
+  </section>
+</aside>
+
+<script>
+const META = /*__META__*/null;
+const $ = (id) => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d"), stage = $("stage");
+
+const state = {
+  page: null, img: null, view: { s: 1, x: 0, y: 0 },
+  hidden: new Set(), solo: null, hover: null, hits: [], hitIdx: -1,
+  layerPaths: [], layerText: [],
+};
+const cache = new Map();
+const pending = new Map();
+
+// ---- dữ liệu trang (file pNNN.js gọi window.__ingestPage) ----
+window.__ingestPage = (data) => { cache.set(data.n, data); pending.get(data.n)?.(data); pending.delete(data.n); };
+const pad = (n) => String(n).padStart(3, "0");
+
+function loadPage(n) {
+  if (cache.has(n)) return Promise.resolve(cache.get(n));
+  return new Promise((resolve, reject) => {
+    pending.set(n, resolve);
+    const s = document.createElement("script");
+    s.src = `p${pad(n)}.js`;
+    s.onerror = () => reject(new Error("Không nạp được " + s.src));
+    document.head.appendChild(s);
+  });
+}
+
+function layerColor(i, name) {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return `hsl(${h % 360} 75% 42%)`;
+}
+
+function buildGeometry(p) {
+  state.layerPaths = p.layers.map(() => ({ s: null, f: null, n: 0 }));
+  state.layerText = p.layers.map(() => ({ path: new Path2D(), n: 0 }));
+  for (const [key, g] of Object.entries(p.paths)) {
+    const lp = state.layerPaths[+key];
+    const stroke = new Path2D(), fill = new Path2D();
+    for (const arr of g.s) addPoly(stroke, arr, false);
+    for (const arr of g.c) addPoly(stroke, arr, true);
+    for (const arr of g.f) addPoly(fill, arr, true);
+    lp.s = stroke; lp.f = g.f.length ? fill : null;
+    lp.n = g.s.length + g.c.length + g.f.length;
+  }
+  for (const t of p.texts) {
+    const lt = state.layerText[t[8]];
+    lt.path.rect(t[0], t[1], t[2] - t[0], t[3] - t[1]); lt.n++;
+  }
+}
+function addPoly(path, a, close) {
+  path.moveTo(a[0], a[1]);
+  for (let i = 2; i < a.length; i += 2) path.lineTo(a[i], a[i + 1]);
+  if (close) path.closePath();
+}
+
+async function showPage(n) {
+  state.want = n;
+  $("loading").style.display = "block";
+  try {
+    const p = await loadPage(n);
+    if (state.want !== n) return;  // người dùng đã chuyển sang trang khác
+    state.page = p; state.hover = null; state.solo = null;
+    buildGeometry(p);
+    state.img = null;
+    if (META.dpi > 0) {
+      const img = new Image();
+      img.onload = () => { state.img = img; draw(); };
+      img.src = `p${pad(n)}.jpg`;
+    }
+    $("pageSel").value = n;
+    document.querySelectorAll(".pg").forEach((el) => el.classList.toggle("active", +el.dataset.n === n));
+    document.querySelector(`.pg[data-n="${n}"]`)?.scrollIntoView({ block: "nearest" });
+    renderStats(p); renderLayers(); runSearch(); fit();
+    try { localStorage.setItem("ingest.page." + META.runId, n); } catch (e) {}
+    history.replaceState(null, "", "#p=" + n);
+  } catch (e) {
+    alert(e.message);
+  } finally {
+    $("loading").style.display = "none";
+  }
+}
+
+// ---- vẽ ----
+function resize() {
+  const r = stage.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  if (state.autoFit) fit(); else draw();
+}
+function fit() {
+  const p = state.page; if (!p) return;
+  const r = stage.getBoundingClientRect(), m = 20;
+  const s = Math.min((r.width - 2 * m) / p.w, (r.height - 2 * m) / p.h);
+  state.view = { s, x: (r.width - p.w * s) / 2, y: (r.height - p.h * s) / 2 };
+  state.autoFit = true;
+  draw();
+}
+let raf = 0;
+function draw() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; paint(); }); }
+
+function paint() {
+  const p = state.page, dpr = window.devicePixelRatio || 1, v = state.view;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  if (!p) return;
+  ctx.setTransform(v.s * dpr, 0, 0, v.s * dpr, v.x * dpr, v.y * dpr);
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, p.w, p.h);
+
+  if ($("showBg").checked && state.img) {
+    ctx.globalAlpha = 1 - $("bgAlpha").value / 100;
+    ctx.drawImage(state.img, 0, 0, p.w, p.h);
+    ctx.globalAlpha = 1;
+  }
+  const hair = 1 / v.s, flat = $("colorMode").value === "flat";
+  const visible = (i) => !state.hidden.has(i) && (state.solo === null || state.solo === i);
+
+  state.layerPaths.forEach((lp, i) => {
+    if (!lp.n || !visible(i)) return;
+    const color = flat ? "#1d1d1b" : layerColor(i, p.layers[i]);
+    if (lp.f && $("showFill").checked) { ctx.fillStyle = color; ctx.globalAlpha = 0.35; ctx.fill(lp.f); ctx.globalAlpha = 1; }
+    if (lp.s && $("showStroke").checked) { ctx.strokeStyle = color; ctx.lineWidth = hair; ctx.stroke(lp.s); }
+  });
+  if ($("showText").checked) {
+    ctx.lineWidth = 1.5 * hair;
+    state.layerText.forEach((lt, i) => {
+      if (!lt.n || !visible(i)) return;
+      ctx.strokeStyle = flat ? "#2f6fdb" : layerColor(i, p.layers[i]);
+      ctx.stroke(lt.path);
+    });
+  }
+  // kết quả tìm kiếm + chữ đang trỏ
+  ctx.fillStyle = "rgba(255,212,0,.45)";
+  for (const i of state.hits) { const t = p.texts[i]; ctx.fillRect(t[0], t[1], t[2] - t[0], t[3] - t[1]); }
+  if (state.hitIdx >= 0) outline(p.texts[state.hits[state.hitIdx]], "#e0000f", 3 * hair);
+  if (state.hover !== null) outline(p.texts[state.hover], "#e0000f", 2 * hair);
+}
+function outline(t, color, w) {
+  ctx.strokeStyle = color; ctx.lineWidth = w;
+  const m = 2 / state.view.s;
+  ctx.strokeRect(t[0] - m, t[1] - m, t[2] - t[0] + 2 * m, t[3] - t[1] + 2 * m);
+}
+
+// ---- tương tác ----
+const toPage = (e) => {
+  const r = stage.getBoundingClientRect(), v = state.view;
+  return [(e.clientX - r.left - v.x) / v.s, (e.clientY - r.top - v.y) / v.s];
+};
+stage.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const r = stage.getBoundingClientRect(), v = state.view;
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  const k = Math.exp(-e.deltaY * 0.0015), s = Math.min(Math.max(v.s * k, 0.05), 200);
+  state.view = { s, x: mx - (mx - v.x) * (s / v.s), y: my - (my - v.y) * (s / v.s) };
+  state.autoFit = false;
+  draw();
+}, { passive: false });
+
+let drag = null;
+stage.addEventListener("mousedown", (e) => { drag = { x: e.clientX, y: e.clientY, vx: state.view.x, vy: state.view.y }; stage.classList.add("drag"); });
+window.addEventListener("mouseup", () => { drag = null; stage.classList.remove("drag"); });
+window.addEventListener("mousemove", (e) => {
+  if (drag) {
+    state.view.x = drag.vx + e.clientX - drag.x; state.view.y = drag.vy + e.clientY - drag.y;
+    state.autoFit = false; draw(); return;
+  }
+  if (!state.page || e.target !== cv) return;
+  const [x, y] = toPage(e), p = state.page, tol = 2 / state.view.s;
+  let best = null, area = Infinity;
+  p.texts.forEach((t, i) => {
+    if (state.hidden.has(t[8]) || (state.solo !== null && state.solo !== t[8])) return;
+    if (x >= t[0] - tol && x <= t[2] + tol && y >= t[1] - tol && y <= t[3] + tol) {
+      const a = (t[2] - t[0]) * (t[3] - t[1]); if (a < area) { area = a; best = i; }
+    }
+  });
+  if (best !== state.hover) { state.hover = best; renderInfo(best, x, y); draw(); }
+  else if (best === null) renderInfo(null, x, y);
+});
+stage.addEventListener("dblclick", fit);
+
+function renderInfo(i, x, y) {
+  const p = state.page, pos = `x ${x.toFixed(1)} · y ${y.toFixed(1)} pt`;
+  if (i === null) { $("info").innerHTML = `<span class="m">${pos}</span>`; return; }
+  const t = p.texts[i];
+  $("info").innerHTML = `<div class="txt"></div>
+    <div class="m">Font: ${esc(p.fonts[t[5]])} · cỡ ${t[6]} · xoay ${t[7]}°</div>
+    <div class="m">Layer: ${esc(p.layers[t[8]])}</div>
+    <div class="m">Khung: (${t[0]}, ${t[1]}) → (${t[2]}, ${t[3]})</div>
+    <div class="m">${pos}</div>`;
+  $("info").querySelector(".txt").textContent = t[4];
+}
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function renderStats(p) {
+  const s = p.stats, rows = [
+    ["Khổ trang (pt)", `${p.w} × ${p.h}`], ["Xoay trang", p.rotation + "°"],
+    ["Khối chữ", s.texts], ["Ký tự (không khoảng trắng)", s.chars],
+    ["Nét vẽ", s.paths], ["Điểm", s.points], ["Nét kín", s.closed], ["Vùng tô", s.filled], ["Nét đứt", s.dashed],
+    ["Số layer", s.layers], ["Thời gian trích chữ", s.textMs + " ms"], ["Thời gian trích nét", s.pathsMs + " ms"],
+    ["Góc xoay chữ", Object.entries(s.rotations).map(([k, v]) => `${k}°:${v}`).join(" ")],
+  ];
+  $("stats").innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${typeof v === "number" ? v.toLocaleString("vi-VN") : esc(v)}</td></tr>`).join("");
+}
+
+function renderLayers() {
+  const p = state.page, q = $("layerFilter").value.trim().toLowerCase();
+  const textCount = state.layerText.map((l) => l.n);
+  const order = p.layers.map((_, i) => i)
+    .sort((a, b) => (state.layerPaths[b].n + textCount[b]) - (state.layerPaths[a].n + textCount[a]));
+  $("layers").innerHTML = order.filter((i) => !q || p.layers[i].toLowerCase().includes(q)).map((i) => `
+    <div class="ly${state.solo === i ? " solo" : ""}" data-i="${i}">
+      <input type="checkbox" ${state.hidden.has(i) ? "" : "checked"}>
+      <span class="sw" style="background:${layerColor(i, p.layers[i])}"></span>
+      <span class="nm" title="${esc(p.layers[i])}">${esc(p.layers[i])}</span>
+      <span class="ct">${textCount[i]} / ${state.layerPaths[i].n.toLocaleString("vi-VN")}</span>
+    </div>`).join("");
+}
+$("layers").addEventListener("change", (e) => {
+  const i = +e.target.closest(".ly").dataset.i;
+  e.target.checked ? state.hidden.delete(i) : state.hidden.add(i); draw();
+});
+$("layers").addEventListener("click", (e) => {
+  if (!e.target.classList.contains("nm")) return;
+  const i = +e.target.closest(".ly").dataset.i;
+  state.solo = state.solo === i ? null : i; renderLayers(); draw();
+});
+$("layerFilter").addEventListener("input", renderLayers);
+$("allOn").onclick = () => { state.hidden.clear(); state.solo = null; renderLayers(); draw(); };
+$("allOff").onclick = () => { state.page.layers.forEach((_, i) => state.hidden.add(i)); state.solo = null; renderLayers(); draw(); };
+
+function runSearch() {
+  const q = $("search").value.trim().toLowerCase(), p = state.page;
+  state.hits = q && p ? p.texts.map((t, i) => [t, i]).filter(([t]) => t[4].toLowerCase().includes(q)).map(([, i]) => i) : [];
+  state.hitIdx = -1;
+  $("hits").textContent = q ? `${state.hits.length} kết quả` : "";
+  draw();
+}
+$("search").addEventListener("input", runSearch);
+$("search").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" || !state.hits.length) return;
+  state.hitIdx = (state.hitIdx + 1) % state.hits.length;
+  const t = state.page.texts[state.hits[state.hitIdx]], r = stage.getBoundingClientRect();
+  const s = Math.max(state.view.s, 4);
+  state.view = { s, x: r.width / 2 - ((t[0] + t[2]) / 2) * s, y: r.height / 2 - ((t[1] + t[3]) / 2) * s };
+  state.autoFit = false;
+  $("hits").textContent = `${state.hitIdx + 1}/${state.hits.length}`;
+  draw();
+});
+
+["showBg", "showText", "showStroke", "showFill", "colorMode", "bgAlpha"].forEach((id) => $(id).addEventListener("input", draw));
+$("fit").onclick = fit;
+const step = (d) => {
+  const list = META.pages.map((x) => x.n), i = list.indexOf(state.page?.n);
+  const n = list[Math.min(Math.max(i + d, 0), list.length - 1)]; if (n !== state.page?.n) showPage(n);
+};
+$("prev").onclick = () => step(-1); $("next").onclick = () => step(1);
+$("pageSel").onchange = (e) => showPage(+e.target.value);
+window.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+  if (e.key === "ArrowLeft") step(-1); else if (e.key === "ArrowRight") step(1);
+  else if (e.key === "f" || e.key === "F") fit();
+});
+
+// ---- khởi động ----
+const who = META.reviewId ? `hồ sơ ${META.reviewId} · ${META.houseType || ""}` : (META.fileName || META.runId);
+$("file").textContent = `${who} · ${META.pages.length}/${META.pageCount} trang · ${META.createdAt} · ${META.status} (${META.totalSeconds}s)`;
+$("pageSel").innerHTML = META.pages.map((p) => `<option value="${p.n}">Trang ${p.n}</option>`).join("");
+$("pages").innerHTML = META.pages.map((p) => `
+  <div class="pg" data-n="${p.n}">
+    <b>Trang ${p.n}</b>
+    <div class="t" title="${esc(p.title)}">${esc(p.title) || "—"}</div>
+    <div class="c">${p.texts.toLocaleString("vi-VN")} chữ · ${p.paths.toLocaleString("vi-VN")} nét · ${p.layers} layer</div>
+  </div>`).join("");
+$("pages").addEventListener("click", (e) => { const el = e.target.closest(".pg"); if (el) showPage(+el.dataset.n); });
+new ResizeObserver(resize).observe(stage);
+let start = META.pages[0].n;
+try { const saved = +localStorage.getItem("ingest.page." + META.runId); if (META.pages.some((p) => p.n === saved)) start = saved; } catch (e) {}
+const fromHash = +(location.hash.match(/p=(\d+)/) || [])[1];
+if (META.pages.some((p) => p.n === fromHash)) start = fromHash;
+showPage(start);
+</script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+{
+  "source": "PN2.DN-Ban ve mau demo test AI - comment check.pdf",
+  "method": "text diff vs original PDF (auto-extracted, needs human cleanup)",
+  "pages": [
+    {
+      "pageNumber": 4,
+      "pageTitle": "CHI TIẾT JOIN MẶT TIỀN, HÀNG RÀO 2 NHÀ",
+      "comments": [
+        {
+          "text": "Theo chuẩn hóa thiết kế, chân tường hàng rào không chống thấ m",
+          "boundingBox": {
+            "x": 19.53,
+            "y": 64.63,
+            "width": 6.14,
+            "height": 3.72
+          }
+        },
+        {
+          "text": "DMD/TVTK điều chỉnh chi tiết ron âm theo thiết k ế điển hình chuẩn hóa",
+          "boundingBox": {
+            "x": 31.04,
+            "y": 26.92,
+            "width": 7.48,
+            "height": 2.86
+          }
+        },
+        {
+          "text": "theo Chuẩn hóa thiết kế, không thực hiện l ớp chống thấm",
+          "boundingBox": {
+            "x": 40.83,
+            "y": 41.5,
+            "width": 6.25,
+            "height": 2.86
+          }
+        },
+        {
+          "text": "DMD/TVTK cập nhật chi tiết trần ngoài nhà, theo Chuẩn hóa thiết kế: hệ khung alpha VT, tấm trần thạch cao chống ẩm 9mm",
+          "boundingBox": {
+            "x": 74.71,
+            "y": 64.03,
+            "width": 6.48,
+            "height": 3.66
+          }
+        },
+        {
+          "text": "Xem lại CHTK ron âm",
+          "boundingBox": {
+            "x": 34.38,
+            "y": 1.29,
+            "width": 4.14,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "Khe hở 2 nhà giáp nhau rộng 10mm, hoàn thiện theo CHTK.",
+          "boundingBox": {
+            "x": 54.88,
+            "y": -0.87,
+            "width": 3.41,
+            "height": 5.44
+          }
+        },
+        {
+          "text": "mái 2 nhà giáp nhau.",
+          "boundingBox": {
+            "x": 79.02,
+            "y": -0.62,
+            "width": 6.1,
+            "height": 1.15
+          }
+        },
+        {
+          "text": "theo CHTK : không chống thấm",
+          "boundingBox": {
+            "x": 25.25,
+            "y": 26.85,
+            "width": 3.92,
+            "height": 2.86
+          }
+        },
+        {
+          "text": "Không bàn giao ống thoát sàn vệ sinh",
+          "boundingBox": {
+            "x": 51.18,
+            "y": 43.48,
+            "width": 6.03,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "Cập nhật theo CHTK : Mặt cắt ban công, lô gia, sân thượng điển hình.",
+          "boundingBox": {
+            "x": 79.28,
+            "y": 74.48,
+            "width": 10.03,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "Cập nhật theo CHTK về chi tiết ngạch cửa mở ( gỗ, nhôm kính), c ửa lùa nhôm kính.",
+          "boundingBox": {
+            "x": 23.97,
+            "y": 73.55,
+            "width": 9.77,
+            "height": 2.86
+          }
+        },
+        {
+          "text": "Theo CHTK : chỉ âm ng ắt nước mưa kt 10x10 mm",
+          "boundingBox": {
+            "x": 50.19,
+            "y": 95.01,
+            "width": 3.45,
+            "height": 4.58
+          }
+        },
+        {
+          "text": "Cập theo CHTK chi tiết Sàn mái BTCT bằng",
+          "boundingBox": {
+            "x": 67.4,
+            "y": 90.18,
+            "width": 6.86,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "Cập nhật theo CHTK: hệ lan can kính  dán cư ờng lực 10.76mm + phụ kiện inox 304 trung cấp",
+          "boundingBox": {
+            "x": 92.58,
+            "y": 74.54,
+            "width": 4.83,
+            "height": 6.3
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 5,
+      "pageTitle": "MẶT ĐỨNG",
+      "comments": [
+        {
+          "text": "Không bàn giao sàn BTCT tầng 1",
+          "boundingBox": {
+            "x": 25.21,
+            "y": 27.52,
+            "width": 4.94,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "Chèn đỉnh tưởng giáp dầm, sàn gạch đặc",
+          "boundingBox": {
+            "x": 65.02,
+            "y": 57.93,
+            "width": 7.92,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "DMD RÀ SOÁT VÀ CẬP NHẬT THEO CHTK CÁC CHI TIẾT CẤU TẠO VÀ GHI CHÚ CHUNG",
+          "boundingBox": {
+            "x": 5.5,
+            "y": 65.63,
+            "width": 9.98,
+            "height": 2.86
+          }
+        },
+        {
+          "text": "Không trát mặt bậc",
+          "boundingBox": {
+            "x": 18.89,
+            "y": 65.95,
+            "width": 3.2,
+            "height": 2.01
+          }
+        },
+        {
+          "text": "Lớp vữa hoàn thiện: không thực hiện - Bê tông đá mi M200, thép D4@250-300 - Đánh dốc về rãnh mương/ phễu thu, dốc min 1,5%",
+          "boundingBox": {
+            "x": 81.17,
+            "y": 19.75,
+            "width": 9.56,
+            "height": 5.44
+          }
+        },
+        {
+          "text": "Theo CHTK : lớp trát vữa dày 15mm",
+          "boundingBox": {
+            "x": 80.66,
+            "y": 59.67,
+            "width": 5.99,
+            "height": 2.01
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 6,
+      "pageTitle": "CHI TIẾT KHE MẶT ĐỨNG GIỮA  TƯỜNG 2 NHÀ VUÔNG GÓC",
+      "comments": [
+        {
+          "text": "Cập nhật theo CHTK trần ngoài nhà : tấm thạch cao chống ẩm 9mm có thanh shadowline",
+          "boundingBox": {
+            "x": 38.12,
+            "y": 58.61,
+            "width": 10.42,
+            "height": 2.86
+          }
+        },
+        {
+          "text": "Không có ốp đá mặt tiền",
+          "boundingBox": {
+            "x": 17.31,
+            "y": 69.34,
+            "width": 4.76,
+            "height": 2.01
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 13,
+      "pageTitle": "MẶT BẰNG CHỐNG MỐI _ TL:1/50",
+      "comments": [
+        {
+          "text": "- Không bàn giao sàn BTCT tầng 1 - Không thực hiện chống mối",
+          "boundingBox": {
+            "x": 33.3,
+            "y": 64.85,
+            "width": 10.27,
+            "height": 2.01
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 31,
+      "pageTitle": "MẶT ĐỨNG TRÍCH ĐOẠN A-B - TẦNG 1_TL:1/25",
+      "comments": [
+        {
+          "text": "Xem CHTK về cửa đi : chiều cao, chiều rộng cửa; ô fix trên. Nế u không ảnh hưởng quá lớn đến mặt ngoài, đề xuất DMD đồng bộ theo hướng CHTK",
+          "boundingBox": {
+            "x": 63.0,
+            "y": 66.47,
+            "width": 18.27,
+            "height": 2.86
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 43,
+      "pageTitle": "CHI TIẾT MẶT BẰNG MÁI ĐÓN TRỤC B-A_TL: 1/25",
+      "comments": [
+        {
+          "text": "Theo CHTK:  kính dày 12,76mm (6mm kính CL + 0,76 PVB + 6mm kính bán CL)",
+          "boundingBox": {
+            "x": 5.1,
+            "y": 9.23,
+            "width": 7.19,
+            "height": 3.72
+          }
+        },
+        {
+          "text": "Rà soát định hướng VE",
+          "boundingBox": {
+            "x": 56.41,
+            "y": 3.89,
+            "width": 6.76,
+            "height": 1.15
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 44,
+      "pageTitle": "CHI TIẾT MẶT BẰNG MÁI ĐÓN TRỤC A-B_TL: 1/25",
+      "comments": [
+        {
+          "text": "theo CHTK : không có ốp trần cemboard",
+          "boundingBox": {
+            "x": 69.73,
+            "y": 71.47,
+            "width": 6.61,
+            "height": 2.01
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 45,
+      "pageTitle": "MẶT CẮT_2",
+      "comments": [
+        {
+          "text": "Rà soát định hướng VE",
+          "boundingBox": {
+            "x": 27.61,
+            "y": 40.07,
+            "width": 6.76,
+            "height": 1.15
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 47,
+      "pageTitle": "MẶT BẰNG",
+      "comments": [
+        {
+          "text": "Trong trường hợp ít ảnh hưởng đến concept, điều chỉnh chi tiết và kích thước cửa đồng bộ với CHTK",
+          "boundingBox": {
+            "x": 32.94,
+            "y": 5.68,
+            "width": 13.15,
+            "height": 2.86
+          }
+        }
+      ]
+    }
+  ]
+}
