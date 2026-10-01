@@ -63,3 +63,8 @@ Schema Pydantic: `src/drawing_checker/features/analyses/schemas.py` (mirror BE) 
 | L-08 | `status` gồm cả `approved` | MAIN không bao giờ gửi `approved` | — |
 
 Không tự sửa repo BE/FE; khi người dùng đồng ý, thay đổi bên BE ghi vào ADR-05 của BE.
+
+## 4. Ghi chú vận hành (2026-09-30)
+
+- BE v0 luôn gửi `rules: []` → MAIN dùng bộ rule mock (`MAIN_MOCK_RULESET`, D-16). Kết quả rule engine chỉ ở viewer; callback vẫn `findings: []`.
+- Hợp đồng BE §7 ghi `npm run start:dev`, nhưng `package.json` của BE hiện là **`npm run dev`** (nest start --watch). Chưa sửa repo BE — báo người dùng.

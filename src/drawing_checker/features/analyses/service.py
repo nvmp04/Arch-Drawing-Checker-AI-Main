@@ -7,9 +7,10 @@ Thứ tự bước và nghĩa: docs/architecture.md §2, §5.
   geometry  : geometry
   aggregate : rules.evaluator + findings → gửi toàn bộ kết quả
 
-Hiện tại (hợp đồng BE v0): extract = tải PDF + ingest từng trang (tiến độ theo trang) → aggregate,
-findings rỗng. BE cho phép bỏ qua bước giữa. Kết quả ingest xem ở viewer debug của job
-(features/ingest/inspector.py, phục vụ tại /debug/inspect/) — chưa gửi gì về BE ngoài tiến độ.
+Hiện tại (hợp đồng BE v0): extract = tải PDF + ingest + trích thực thể từng trang (tiến độ theo trang)
+→ rule engine (không AI) → aggregate, findings rỗng. BE cho phép bỏ qua bước giữa. Kết quả ingest xem ở viewer debug của job
+(features/ingest/inspector.py, phục vụ tại /debug/inspect/), gồm tab "Kiểm tra" — chưa gửi gì về BE ngoài tiến độ.
+BE v0 luôn gửi `rules: []` → dùng bộ rule mock (MAIN_MOCK_RULESET) nếu được cấu hình.
 """
 
 import asyncio
@@ -24,8 +25,14 @@ from drawing_checker.features.analyses.schemas import (
     DispatchRequest,
     DispatchResult,
 )
+from drawing_checker.features.extraction.schemas import Entity
+from drawing_checker.features.extraction.service import ExtractionService
+from drawing_checker.features.findings.schemas import LineResult
+from drawing_checker.features.findings.service import FindingsService
 from drawing_checker.features.ingest.inspector import IngestInspector
 from drawing_checker.features.ingest.service import IngestError, IngestService, PageReader
+from drawing_checker.features.rules.schemas import RuleInput
+from drawing_checker.features.rules.service import UNSUPPORTED_REASON, CheckReport, RulesService, load_mock_rules
 from drawing_checker.infrastructure.backend_client import BackendClient, CallbackRejected, JobAborted
 from drawing_checker.infrastructure.job_runner import JobRunner
 from drawing_checker.infrastructure.pdf_fetcher import PdfFetchError, PdfFetcher
@@ -50,6 +57,8 @@ class AnalysesService:
         ingest: IngestService | None = None,
         inspect_dir: Path | None = None,
         inspect_dpi: int = 0,
+        mock_ruleset: Path | None = None,
+        confidence_threshold: float = 0.8,
     ) -> None:
         self._backend = backend
         self._fetcher = fetcher
@@ -57,6 +66,10 @@ class AnalysesService:
         self._ingest = ingest or IngestService()
         self._inspect_dir = inspect_dir  # None = không ghi viewer debug
         self._inspect_dpi = inspect_dpi
+        self._mock_ruleset = mock_ruleset  # dùng khi BE gửi rules: [] (hợp đồng v0)
+        self._extraction = ExtractionService()
+        self._rules = RulesService()
+        self._findings = FindingsService(confidence_threshold)
         self._jobs: dict[str, AnalysisStatus] = {}
 
     async def dispatch(self, request: DispatchRequest) -> DispatchResult:
@@ -83,11 +96,14 @@ class AnalysesService:
             try:
                 pdf_path = await self._fetcher.fetch(request.pdf_url, job_id)
                 with self._ingest.reader(pdf_path) as reader:
-                    page_count = await self._ingest_pages(job_id, request, reader, inspector)
+                    page_count, entities = await self._ingest_pages(job_id, request, reader, inspector)
             except (PdfFetchError, IngestError) as exc:
                 raise _StageFailed(str(exc)) from exc
             percent = 90
             await self._report(job_id, request, stage, AnalysisRunState.COMPLETED, percent, page_count=page_count)
+
+            # Rule engine (không AI): kết quả chỉ ghi vào viewer, chưa gửi BE (chờ hợp đồng v1).
+            await asyncio.to_thread(self._run_checks, job_id, request, entities, inspector)
 
             # Chưa có ocr/material/geometry — xong luôn, findings rỗng.
             stage, percent = AnalysisStage.AGGREGATE, 100
@@ -124,10 +140,11 @@ class AnalysesService:
 
     async def _ingest_pages(
         self, job_id: str, request: DispatchRequest, reader: PageReader, inspector: IngestInspector | None
-    ) -> int:
-        """Ingest lần lượt từng trang trong thread (trang nặng ~5 s CPU), báo tiến độ 10 → 90%."""
+    ) -> tuple[int, list[Entity]]:
+        """Ingest + trích thực thể lần lượt từng trang trong thread (trang nặng ~5 s CPU), tiến độ 10 → 90%."""
         total = reader.page_count
         dpi = self._inspect_dpi
+        entities: list[Entity] = []
         if inspector is not None:
             inspector.start(total, dpi)
 
@@ -135,7 +152,8 @@ class AnalysesService:
             page = reader.read(page_number)
             if inspector is not None:
                 inspector.write_page(page, reader.render_jpeg(page_number, dpi) if dpi > 0 else None)
-            # Chưa có bước sau dùng kết quả; `page` (có thể ~300k nét) được giải phóng ngay.
+            entities.extend(self._extraction.extract(page))
+            # Nét vẽ của trang (có thể ~300k) được giải phóng ngay — bước sau chỉ cần thực thể.
 
         await self._report(job_id, request, AnalysisStage.EXTRACT, AnalysisRunState.RUNNING, 10)
         for n in range(1, total + 1):
@@ -143,7 +161,28 @@ class AnalysesService:
             percent = 10 + round(80 * n / total)
             if percent < 90:
                 await self._report(job_id, request, AnalysisStage.EXTRACT, AnalysisRunState.RUNNING, percent)
-        return total
+        return total, entities
+
+    def _run_checks(
+        self, job_id: str, request: DispatchRequest, entities: list[Entity], inspector: IngestInspector | None
+    ) -> None:
+        rules, source = self._resolve_rules(request)
+        if not rules:
+            logger.info("Job %s: không có bộ rule (BE gửi rỗng, không cấu hình mock) — bỏ qua kiểm tra", job_id)
+            return
+        report = self._rules.check(rules, request.house_type, request.categories, entities)
+        results = self._findings.finalize(report.results)
+        logger.info("Job %s: kiểm %d dòng tiêu chí (%s) — %s", job_id, report.coverage["linesApplicable"],
+                    source, report.coverage["byStatus"])
+        if inspector is not None:
+            inspector.write_checks(_checks_payload(report, results, source, request, entities))
+
+    def _resolve_rules(self, request: DispatchRequest) -> tuple[list[RuleInput], str]:
+        if request.rules:
+            return request.rules, "BE"
+        if self._mock_ruleset is not None and self._mock_ruleset.exists():
+            return load_mock_rules(self._mock_ruleset), f"mock: {self._mock_ruleset.name}"
+        return [], ""
 
     def _new_inspector(self, job_id: str, request: DispatchRequest) -> IngestInspector | None:
         if self._inspect_dir is None:
@@ -210,3 +249,48 @@ class AnalysesService:
     def _set_state(self, job_id: str, state: AnalysisRunState) -> None:
         if job_id in self._jobs:
             self._jobs[job_id] = self._jobs[job_id].model_copy(update={"state": state})
+
+
+def _checks_payload(
+    report: CheckReport, results: list[LineResult], source: str, request: DispatchRequest, entities: list[Entity]
+) -> dict:
+    """Dữ liệu tab "Kiểm tra" của viewer: một dòng / kết quả, kèm nội dung rule để người đọc."""
+    rules = {r.rule_id: r for r in report.rules}
+    rows = []
+    for r in results:
+        rule = rules[r.rule_id]
+        rows.append({
+            "code": rule.code or f"{rule.parent_code} ({rule.title})",
+            "title": rule.title or "",
+            "headings": rule.headings,
+            "category": rule.category.value if rule.category else None,
+            "line": r.line_index,
+            "lineText": rule.requirement_lines[r.line_index] if r.line_index < len(rule.requirement_lines) else "",
+            "status": r.status.value,
+            "confidence": r.confidence,
+            "reason": r.reason,
+            "supported": r.reason != UNSUPPORTED_REASON,
+            "extracted": r.extracted_value,
+            "standard": r.standard_value,
+            "evidence": [
+                {"page": e.page_number, "bbox": _bbox(e.polygon), "role": e.role.value, "text": e.text}
+                for e in r.evidence
+            ],
+        })
+    kinds: dict[str, int] = {}
+    for e in entities:
+        kinds[e.kind.value] = kinds.get(e.kind.value, 0) + 1
+    return {
+        "source": source,
+        "houseType": request.house_type.value,
+        "categories": [c.value for c in request.categories],
+        "coverage": report.coverage,
+        "entities": kinds,
+        "rows": rows,
+    }
+
+
+def _bbox(polygon) -> list[float]:
+    xs = [p.x for p in polygon.points]
+    ys = [p.y for p in polygon.points]
+    return [round(min(xs), 2), round(min(ys), 2), round(max(xs), 2), round(max(ys), 2)]

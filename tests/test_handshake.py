@@ -69,7 +69,12 @@ class FakeBackend:
         return httpx.Response(status)
 
 
-def make_service(fake: FakeBackend, tmp_path: Path, inspect_dir: Path | None = None) -> AnalysesService:
+MOCK_RULESET = Path(__file__).resolve().parent.parent / "samples" / "criteria" / "ruleset-4sao.json"
+
+
+def make_service(
+    fake: FakeBackend, tmp_path: Path, inspect_dir: Path | None = None, mock_ruleset: Path | None = None
+) -> AnalysesService:
     transport = httpx.MockTransport(fake.handler)
     return AnalysesService(
         backend=BackendClient("cb-token", transport=transport),
@@ -77,12 +82,15 @@ def make_service(fake: FakeBackend, tmp_path: Path, inspect_dir: Path | None = N
         runner=JobRunner(),
         inspect_dir=inspect_dir,
         inspect_dpi=20,
+        mock_ruleset=mock_ruleset,
     )
 
 
-def run_job(fake: FakeBackend, tmp_path: Path, inspect_dir: Path | None = None) -> tuple[AnalysesService, str]:
+def run_job(
+    fake: FakeBackend, tmp_path: Path, inspect_dir: Path | None = None, mock_ruleset: Path | None = None
+) -> tuple[AnalysesService, str]:
     async def scenario() -> tuple[AnalysesService, str]:
-        service = make_service(fake, tmp_path, inspect_dir)
+        service = make_service(fake, tmp_path, inspect_dir, mock_ruleset)
         result = await service.dispatch(DispatchRequest.model_validate(DISPATCH_BODY))
         while any(not t.done() for t in asyncio.all_tasks() if t is not asyncio.current_task()):
             await asyncio.sleep(0.01)
@@ -127,6 +135,17 @@ def test_happy_path_ingests_pages_and_reports_progress(tmp_path: Path) -> None:
     assert [p["n"] for p in meta["pages"]] == [1, 2, 3, 4]
     assert (job_dir / "index.html").exists() and (job_dir / "p004.js").exists() and (job_dir / "p004.jpg").exists()
     assert job_id in (inspect / "index.html").read_text(encoding="utf-8")
+
+
+def test_mock_ruleset_runs_rule_engine_and_writes_checks(tmp_path: Path) -> None:
+    fake = FakeBackend(pdf=make_pdf(pages=2))
+    _, job_id = run_job(fake, tmp_path / "work", tmp_path / "inspect", MOCK_RULESET)
+    assert fake.callbacks[-1] == {**fake.callbacks[-1], "stage": "aggregate", "findings": []}  # BE vẫn chưa nhận findings
+    job_dir = tmp_path / "inspect" / job_id
+    checks = (job_dir / "checks.js").read_text(encoding="utf-8")
+    assert checks.startswith("window.__ingestChecks(") and '"houseType":"townhouse"' in checks
+    meta = json.loads((job_dir / "meta.json").read_text(encoding="utf-8"))
+    assert meta["checks"]["rulesTotal"] == 92 and meta["checks"]["source"].startswith("mock")
 
 
 def test_failed_job_is_recorded_in_viewer_index(tmp_path: Path) -> None:

@@ -23,6 +23,8 @@ def get_analyses_service() -> AnalysesService:
         runner=JobRunner(),
         inspect_dir=settings.inspect_dir if settings.inspect_enabled else None,
         inspect_dpi=settings.inspect_dpi,
+        mock_ruleset=settings.mock_ruleset,
+        confidence_threshold=settings.confidence_threshold,
     )
 
 

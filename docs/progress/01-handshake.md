@@ -4,7 +4,7 @@ Theo hợp đồng `arch-drawing-checker-backend/docs/contracts/be-main.md` (v0)
 
 ## Đã làm
 
-- Môi trường: venv hết bị chặn → `.venv` là cách chạy chính (`AGENTS.md` §5).
+- Môi trường: venv hết bị chặn → `.venv` là cách chạy chính (`AGENTS.md` §5). *(Từ 2026-09-30: bỏ venv, chạy bằng Python hệ thống.)*
 - `common/security.py`: kiểm `Authorization: Bearer <MAIN_SERVICE_TOKEN>` (so sánh hằng thời gian), sai → 401.
 - `infrastructure/backend_client.py`: gửi callback với `x-internal-token`, body by_alias + bỏ None; retry 5xx/lỗi mạng (0.5/1/2 s); `JobAborted` cho 404/409, `CallbackRejected` cho 400/401.
 - `infrastructure/pdf_fetcher.py`: tải theo luồng, kiểm `%PDF-`, ánh xạ lỗi BE (`SIGNED_URL_EXPIRED`…) sang thông báo tiếng Việt.

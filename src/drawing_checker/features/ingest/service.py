@@ -7,6 +7,7 @@
 
 import math
 import time
+import unicodedata
 from functools import lru_cache
 from pathlib import Path
 
@@ -17,6 +18,7 @@ from drawing_checker.features.ingest.schemas import DrawingDocument, DrawingPage
 
 BEZIER_SEGMENTS = 8  # số đoạn thẳng thay cho một đường cong Bézier
 # Khoảng trắng đặc biệt (NBSP…) do bảng mã font → khoảng trắng thường, để regex bước trích xuất đơn giản.
+# Chữ còn được chuẩn hóa NFC: một số font CAD ghi dấu tiếng Việt dạng tổ hợp ("O" + dấu sắc rời, PN2 trang 6).
 _SPACES = str.maketrans({"\u00a0": " ", "\u2007": " ", "\u202f": " ", "\u3000": " "})
 
 
@@ -140,7 +142,7 @@ def extract_texts(page: pymupdf.Page) -> list[TextSpan]:
                 continue
             chars.append(chr(code))
             box |= rect
-        text = "".join(chars).translate(_SPACES).strip()
+        text = unicodedata.normalize("NFC", "".join(chars).translate(_SPACES)).strip()
         if not text:
             continue
         dx, dy = span["dir"]

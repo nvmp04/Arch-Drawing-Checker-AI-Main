@@ -14,10 +14,10 @@ Mục tiêu: chạy hết bộ PDF mẫu, ra kết quả theo requirementLine c�
 
 1. ✅ `ingest`: đọc PDF → trang, khối chữ + tọa độ + layer, nét vẽ + layer (2026-09-28, `progress/02-ingest.md`). Quy đổi tọa độ Q-01 để ở `findings`. Công cụ xem: `scripts/inspect_ingest.py`.
 2. `sheets`: phân loại trang theo tiêu đề; tách khung nhìn + tỉ lệ.
-3. `rules.interpreter` bản luật: tách số/đơn vị/toán tử từ `value` và `requirementLines`.
-4. `extraction` heuristic: cao độ, thang, bảng cửa, kích thước, ghi chú.
-5. `rules.evaluator`: so ngưỡng.
-6. `semantic` bản từ khóa + so số cho tiêu chí dạng chữ.
+3. ✅ (đợt đầu) `rules`: phân tích ngưỡng + so sánh + bảng khai báo rule → checker (2026-09-30, `progress/03-rule-engine.md`). Còn: mở rộng checker theo độ phủ đo được.
+4. ◐ `extraction` heuristic: ✅ cao độ, vế thang, bảng cửa, bảng vật liệu hoàn thiện, ghi chú trần (2026-10-01, `progress/04-finish-materials.md`) · ☐ kích thước (đường kích thước ↔ số), ghi chú vật liệu tường / sàn, vị trí mã vật liệu trên mặt bằng.
+5. ✅ `rules.evaluator`: so ngưỡng.
+6. ◐ Tiêu chí chữ / vật liệu theo D-17 (luật trước, AI sau): ✅ bước 1 — 5.1 trần ngoài nhà (từ điển vật liệu dùng chung cho tiêu chí và bản vẽ) · ☐ bước 2 — mở rộng sang tiêu chí vật liệu khác, đo trên 29 comment · ☐ bước 3 — embedding tìm ứng viên ở chỗ luật bỏ sót.
 7. `findings` + `analyses`: dispatch → chạy nền → callback BE theo 5 bước.
 8. `benchmark`: làm sạch `samples/ground-truth/…json`, đo precision / recall.
 

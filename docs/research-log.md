@@ -56,3 +56,59 @@ Công cụ: `scripts/inspect_ingest.py` → viewer HTML (`data/inspect/<pdf>/ind
 - **Nét vẽ:** 2,48 triệu drawing / 48 trang; trang nặng nhất 39 (317k nét, 74% thuộc layer `A-hatch`). Không có nét đứt (`dashes` luôn rỗng) — CAD xuất nét đứt thành đoạn rời. Đa số drawing là 1 đoạn thẳng.
 - **Trang 1 (danh mục bản vẽ) là ảnh nhúng**, chỉ có 3 khối chữ vector → nội dung bảng không đọc được nếu không OCR (D-03). Không ảnh hưởng tiêu chí (trang bìa/danh mục), nhưng cho thấy PDF "vector" vẫn có thể lẫn ảnh.
 - **Hiệu năng (CPU máy dev):** chữ cả 48 trang ~6 s; nét vẽ trang 39: `get_cdrawings` 2,3 s + chuyển đổi → tổng ~5 s (ban đầu 18 s — Pydantic `model_construct` chiếm 70% → đổi `VectorPath` sang dataclass). Xuất viewer toàn bộ 48 trang: 95 s, 99 MB.
+
+## 7. Rule engine không AI trên bộ mẫu PN2 (2026-09-30)
+
+Luồng thật FE/curl → BE → MAIN, loại nhà shophouse, đủ 5 nhóm, bộ rule mock 4 SAO (D-16).
+
+**Độ phủ:** 92 rule → 86 áp dụng (lọc loại nhà) → 223 dòng tiêu chí; **35 dòng có checker (16%)**, 188 dòng "chưa hỗ trợ". 16 kết quả: **6 đạt · 7 không đạt · 1 chờ người · 2 không thấy dữ liệu**.
+
+| Tiêu chí | Trích từ bản vẽ | Kết quả |
+|---|---|---|
+| 1.8 cote tầng 1 − vỉa hè ≥150 | +0.250 − ±0.000 = 250 (6 trang) | đạt |
+| 2.1.1 tầng hầm | không có nhãn HẦM | không thấy dữ liệu ("nếu có") |
+| 2.1.2 tầng 1 ≥4.0m | +4.450 − 0.250 = 4200 | đạt |
+| 2.1.3 tầng 2–3 ≥3.4m | 3400, 3400 (tầng 3 tới cao độ MÁI) | đạt sát ngưỡng; **cờ: 2/22 chỗ ghi +7.800 thay vì +7.850 (trang 41)** |
+| 2.1.4 tầng tum | không có | không thấy dữ liệu |
+| 3.2 rộng bậc ≥250 | 250 | đạt sát ngưỡng |
+| 3.2 biến thể ≥280 ("nêu trong Báo cáo NCKT") | 250 | chờ người (điều kiện không kiểm được) |
+| 3.4 cao bậc ≤180 | 168 (tầng 1→2), 162 (tầng 2→3) | đạt |
+| 3.5 số bậc ∈ {17,18,21,22,25} | 25, 21 | đạt |
+| 1.4.x danh mục cửa | DR-01…06, WD-01 (trang 47–48) | **7/7 không đạt** — trùng comment người kiểm tra |
+
+Kỹ thuật đáng giữ:
+- **Nhận ra vế ghi chiều cao bậc mà không đoán theo giá trị:** các vế cùng chiều cao bậc trong một chuỗi kích thước cộng lại bằng chiều cao tầng (25 × 168 = 4200 = +4.450 − 0.250; 21 × 162 ≈ 3400). Hai nguồn số liệu độc lập khớp chéo → vừa phân loại vừa tự kiểm chứng.
+- **Cao độ:** nhãn ("TẦNG 2", "VỈA HÈ", "MÁI") với số ngay dưới ~11pt trên mặt đứng / mặt cắt; gom theo số đông trên nhiều trang, ghi chú chỗ ghi khác. Nhãn "TẦNG 4" trùng cao độ mái (trang 33) → coi là mái.
+- **Bảng cửa:** "4800w x 3000h" + mã cột (DR-/WD-) theo ô bảng (chữ trong ô căn trái, mã căn giữa) + mô tả loại ("trượt" → lùa, "mở"/"bật" → mở). Mục không mã (cửa thăm mái) bỏ qua.
+- Toàn bộ chạy trong ~100 s (chủ yếu là ingest + render ảnh debug); extraction + rule engine < 1 s.
+
+Giới hạn: mẫu regex/bố cục rút từ một bộ bản vẽ; tầng trên cùng tính tới cao độ "MÁI" (giả định, confidence 0.85); tread = các vế không khớp chiều cao tầng (suy ra bằng loại trừ, confidence 0.85).
+
+## 8. Tiêu chí vật liệu — bảng vật liệu hoàn thiện + trần ngoài nhà 5.1 (2026-10-01)
+
+Hướng D-17, bản luật (chưa AI). Bộ mẫu PN2, shophouse.
+
+**Bảng vật liệu hoàn thiện trong PDF từ CAD:** không có cấu trúc bảng — chỉ là chữ đặt theo tọa độ + nét kẻ. Bộ dò bảng tổng quát của PyMuPDF (`find_tables`) **thất bại** (nhầm nét kiến trúc thành ô, không thấy bảng vật liệu). Dựng lại bằng mốc thì ổn định:
+- đầu cột `KÝ HIỆU` + `MÔ TẢ` cùng hàng; tiêu đề ngay trên, có khi tách nhiều khối chữ (`VẬT LIỆU HOÀN THIỆN` + `TRẦN`); chỉ nhận bảng có chữ "VẬT LIỆU" (loại bảng đèn, chú thích);
+- mã theo cột (`FW1`, `FC-01`, `L1`), mô tả ghép với mã **gần nhất theo y** (mô tả có thể lệch trên / dưới mã vài point);
+- hai bảng đặt cạnh nhau (trang 22) → chặn biên phải tại đầu cột của bảng bên cạnh.
+Kết quả: 108 dòng (80 tường, 28 trần) trên các trang 3, 22–36, 43, 44; đọc đúng toàn bộ khi soát tay. Mã vật liệu còn xuất hiện rải trên mặt bằng (vd. 13 thẻ `FC-` ở trang 22) → dùng được để biết "ở đâu" (chưa làm).
+
+**Ghi chú ngoài bảng:** ghi chú CAD gồm nhiều dòng xếp chồng cùng lề trái → ghép (vd. trang 4 "HỆ KHUNG TRẦN" + "TẤM CEMBOARD"). Đợt này chỉ lấy ghi chú có chữ "TRẦN", bỏ "ĐÈN … TRẦN".
+
+**Unicode tổ hợp:** chữ trang 6 ("CHI TIẾT ĐÓNG TRẦN CEMBOARD ĐIỂN HÌNH") ghi dấu dạng NFD ("O" + dấu sắc rời) → regex không khớp. Sửa ở ingest: chuẩn hóa NFC mọi chữ.
+
+**Phạm vi "ngoài nhà":** bộ PN2 là hồ sơ ngoại thất — trang 3 "DANH MỤC VẬT LIỆU HOÀN THIỆN NGOẠI THẤT", trang 4/6 "… NGOÀI NHÀ", trang 43/44 "MÁI ĐÓN", trang 22–24 "ĐÈN … NGOẠI THẤT". Gợi ý lấy theo trang (từ khóa đầu tiên gặp) — thô, đủ cho bộ này.
+
+**Kết quả 5.1 (so với comment người kiểm tra):**
+
+| Vật liệu trần tìm được | Nguồn | Kết quả | Comment người kiểm tra |
+|---|---|---|---|
+| cemboard (FC-01, FC-06, ghi chú) | trang 3, 4, 6, 22–24, 43, 44 | **không đạt** (0.9) | trang 4, 6, 44 — **khớp cả 3** |
+| gỗ nhựa (FC-02, ghi chú) | trang 3, 22–24, 43, 44 | không đạt (0.9) | **không có comment** → cần người dùng xác nhận (đúng luật nhưng có thể là ngoại lệ thiết kế được chấp nhận) |
+| "TRẦN ĐỂ THÔ" (FC-03) | trang 3, 22–24, 43, 44 | chờ người (không nêu vật liệu) | không có |
+| bê tông trát + sơn (FC-04, FC-05) | trang 3, 22–24 | 5.1.2 dòng trát: chờ người (không ghi M75 / 15 mm) · dòng sơn: đạt | không có |
+
+Độ phủ: 39/223 dòng có checker (17%, trước 35). Dòng 5.1.1 về hệ khung / bước khung / ty treo chưa hỗ trợ (comment trang 4 có nhắc "hệ khung alpha VT").
+
+Giới hạn: từ điển vật liệu / phạm vi viết tay từ một bộ bản vẽ; một kết quả gộp mọi chỗ ghi cùng vật liệu (bằng chứng nhiều trang); tấm thạch cao / silicat nếu gặp chỉ trả "chờ người" (chưa kiểm độ dày, chống ẩm, vùng biển / đồng bằng).

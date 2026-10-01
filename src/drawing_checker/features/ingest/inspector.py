@@ -54,6 +54,15 @@ class IngestInspector:
         self.meta["pages"].append(stats)
         return stats
 
+    def write_checks(self, payload: dict) -> None:
+        """Kết quả rule engine cho tab "Kiểm tra" (payload do `analyses` dựng — ingest không phụ thuộc rules)."""
+        (self.dir / "checks.js").write_text(
+            f"window.__ingestChecks({json.dumps(payload, ensure_ascii=False, separators=(',', ':'))});",
+            encoding="utf-8",
+        )
+        self.meta["checks"] = {"source": payload.get("source"), **payload.get("coverage", {})}
+        self._save_meta()
+
     def finish(self, status: str = "completed", error: str | None = None) -> Path:
         """Chốt lần chạy: ghi viewer (kể cả khi lỗi giữa chừng — xem được các trang đã xong)."""
         self.meta.update(status=status, totalSeconds=round(time.perf_counter() - self._started, 1))
@@ -134,6 +143,21 @@ def _r(v: float) -> float:
     return round(v, 2)
 
 
+def _checks_cell(checks: dict | None) -> str:
+    if not checks:
+        return "—"
+    by = checks.get("byStatus", {})
+    parts = [f"<span class='ok'>{by.get('pass', 0)} đạt</span>", f"<span class='bad'>{by.get('fail', 0)} lệch</span>"]
+    if by.get("warning"):
+        parts.append(f"<span class='warn'>{by['warning']} cảnh báo</span>")
+    if by.get("pending"):
+        parts.append(f"{by['pending']} chờ người")
+    if by.get("unknown"):
+        parts.append(f"{by['unknown']} không thấy dữ liệu")
+    return (" · ".join(parts) + f"<br><small>{checks.get('linesSupported', 0)}/{checks.get('linesApplicable', 0)}"
+            f" dòng có checker · {html.escape(str(checks.get('source') or ''))}</small>")
+
+
 def write_runs_index(root: Path) -> None:
     """Trang danh sách các lần chạy (đọc meta.json của từng thư mục)."""
     runs = []
@@ -157,10 +181,10 @@ def write_runs_index(root: Path) -> None:
             f"{'<br><small>' + html.escape(m['error']) + '</small>' if m.get('error') else ''}</td>"
             f"<td>{len(pages)} / {m.get('pageCount') or '?'}</td>"
             f"<td>{sum(p['texts'] for p in pages):,}</td><td>{sum(p['paths'] for p in pages):,}</td>"
-            f"<td>{m.get('totalSeconds', '…')}</td><td>{link}</td>"
+            f"<td>{m.get('totalSeconds', '…')}</td><td>{_checks_cell(m.get('checks'))}</td><td>{link}</td>"
             "</tr>"
         )
-    body = "".join(rows) or "<tr><td colspan='10'>Chưa có lần chạy nào.</td></tr>"
+    body = "".join(rows) or "<tr><td colspan='11'>Chưa có lần chạy nào.</td></tr>"
     (root / "index.html").write_text(
         f"""<!doctype html><html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>Ingest Runs</title>
@@ -169,12 +193,13 @@ body{{margin:0;padding:16px;background:#f4f4f2;color:#1d1d1b;font:13px/1.4 syste
 h1{{font-size:16px;margin:0 0 4px}} p{{color:#6b6b66;margin:0 0 12px}}
 table{{border-collapse:collapse;background:#fff;width:100%}} th,td{{padding:6px 10px;border-bottom:1px solid #deded9;text-align:left;vertical-align:top}}
 th{{font-size:12px;color:#6b6b66;text-transform:uppercase}} td{{font-variant-numeric:tabular-nums}}
+.st.completed,.ok{{color:#1a7f37}} .bad{{color:#c62828}} .warn{{color:#b26a00}}
 .st.completed{{color:#1a7f37}} .st.failed{{color:#c62828}} .st.running{{color:#2f6fdb}} small{{color:#6b6b66}}
 </style></head><body>
 <h1>Kết quả ingest theo lần chạy</h1>
 <p>Mỗi job BE gửi sang (hoặc mỗi lần chạy script) là một dòng. Tải lại trang để cập nhật.</p>
 <table><thead><tr><th>Thời điểm</th><th>Nguồn</th><th>Job / hồ sơ</th><th>Loại nhà</th><th>Trạng thái</th>
-<th>Trang</th><th>Chữ</th><th>Nét</th><th>Giây</th><th></th></tr></thead><tbody>{body}</tbody></table>
+<th>Trang</th><th>Chữ</th><th>Nét</th><th>Giây</th><th>Kiểm tra</th><th></th></tr></thead><tbody>{body}</tbody></table>
 </body></html>""",
         encoding="utf-8",
     )

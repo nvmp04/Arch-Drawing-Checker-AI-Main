@@ -89,3 +89,28 @@ Người dùng (2026-09-28): muốn test **luồng thực thi của hệ thống
 - MAIN phục vụ thư mục đó tại `/debug/inspect/` (StaticFiles), **không xác thực** → chỉ dùng khi phát triển; tắt bằng `MAIN_INSPECT_ENABLED=false`.
 - `scripts/inspect_ingest.py` giữ lại để thử nhanh một PDF cục bộ, ghi vào cùng thư mục.
 Loại: ingest sẵn ngoài hệ thống (cách làm đầu tiên — người dùng bác vì không kiểm được luồng thật).
+
+## D-16 · Đợt thử rule engine không AI: lõi nhỏ + checker + bảng khai báo; kết quả chỉ ở viewer
+
+Người dùng (2026-09-30): muốn biết rule engine thuần (chưa AI) với bộ rule JSON + PDF mẫu đi được tới đâu, qua luồng thật FE → BE → MAIN; lo dự án phình to.
+- **Nguồn rule:** BE v0 gửi `rules: []` → MAIN nạp `MAIN_MOCK_RULESET` (mặc định `samples/criteria/ruleset-4sao.json`). Không sửa BE/FE. Khi hợp đồng v1 gửi nội dung rule (L-01) → tắt mock.
+- **Lọc rule:** `houseTypes` chứa loại nhà của hồ sơ; `category` thuộc các nhóm đã chọn.
+- **Chống phình — 3 lớp tách bạch:**
+  1. Lõi (`rules/interpreter.parse_value`, `rules/evaluator`): phân tích ngưỡng + so sánh, hàm thuần, không nghiệp vụ.
+  2. Checker (`rules/checkers.py`): mỗi loại tiêu chí một hàm, dùng thực thể từ `extraction`. Thêm tiêu chí = thêm checker + dòng bảng.
+  3. Bảng khai báo (`rules/plan_table.py`): rule → checker theo mã (`code` / `parentCode*`), sinh `CheckPlan`. Là MOCK của bước diễn giải (Q-07); bộ diễn giải thật chỉ cần sinh cùng `CheckPlan`.
+- **Dòng không có checker** → `unknown` "chưa hỗ trợ" → báo cáo độ phủ tự động.
+- **Chỉ dùng số GHI trên bản vẽ**, không đo hình học (người dùng: tỉ lệ có thể sai / gõ đè). Điều kiện áp dụng không kiểm được (vd. "nêu trong Báo cáo NCKT") → `pending` qua trường `note` của bảng.
+- **Kết quả chỉ ghi vào viewer** (tab "Kiểm tra"), BE vẫn nhận `findings: []` — chờ chốt Q-09, L-02, L-03.
+- **Phạm vi đợt đầu:** 1.8, 2.1.x, 3.2, 3.4, 3.5, 1.4.1–1.4.5.
+- Một requirementLine có thể có nhiều kết quả khi tiêu chí là danh mục (1.4.x: mỗi cửa một kết quả, gắn với mục danh mục gần nhất).
+
+## D-17 · Hai cách tìm bằng chứng: thực thể dùng chung (tiêu chí số) · rule khai báo phạm vi rồi đi tìm (tiêu chí chữ / vật liệu)
+
+Người dùng (2026-10-01) đặt câu hỏi ngược: "sao không dùng rule để tìm trong bản vẽ thay vì bóc tách mọi thứ rồi mới kiểm?". Chốt kết hợp:
+- **Tiêu chí số / hình học** (chiều cao tầng, bậc thang, cửa…): giữ cách D-16 — trích thực thể **một lần**, nhiều rule dùng chung và khớp chéo (vd. cao độ dùng cho 2.1.x và cho 3.x).
+- **Tiêu chí chữ / vật liệu** (phần lớn 84% dòng chưa hỗ trợ): **rule khai báo phạm vi** (vd. 5.1 "Trần ngoài nhà" = bề mặt *trần* + *ngoài nhà*) rồi tìm bằng chứng khớp phạm vi (bảng vật liệu hoàn thiện, ghi chú). Không phân loại "cái này thuộc rule nào" từ phía bản vẽ.
+- **Nhiều–nhiều:** một bằng chứng dùng được cho nhiều rule; mỗi rule tự kết luận. Không chắc phạm vi → hạ `confidence` (không `fail`).
+- **Luật trước, AI sau** (người dùng đồng ý): từ điển vật liệu / từ đồng nghĩa phạm vi viết tay, **dùng chung cho câu tiêu chí và chữ trên bản vẽ** → danh sách vật liệu được phép suy ra từ câu tiêu chí, không viết cứng. Bản luật là mốc để đo; embedding (Q-12) chỉ thêm vào sau, ở chỗ luật bỏ sót do cách diễn đạt khác, và chỉ để **tìm ứng viên** — kết luận vẫn do luật.
+Lý do: chỉ có 1 bộ bản vẽ có comment (Q-06) → chưa đo được AI; loại tiêu chí "chọn vật liệu từ danh sách" luật làm chính xác và giải thích được (nguyên tắc 9).
+Loại: dựng mô hình toàn bộ căn nhà rồi phân loại từng phát hiện vào rule.

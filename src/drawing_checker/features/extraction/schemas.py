@@ -15,6 +15,7 @@ class EntityKind(str, Enum):
     CALLOUT = "callout"  # ghi chú vật liệu / cấu tạo + đường dẫn tới vị trí
     ROOM = "room"  # tên phòng + polygon (từ geometry)
     TABLE_ROW = "table-row"  # dòng bảng thống kê
+    FINISH = "finish"  # dòng bảng vật liệu hoàn thiện: "FC-01 | TRẦN CEMBOARD HOÀN THIỆN SƠN NƯỚC"
 
 
 class Entity(BaseModel):
@@ -28,3 +29,5 @@ class Entity(BaseModel):
     unit: str | None = None
     polygon: Polygon
     confidence: float = 1.0
+    layer: str | None = None
+    attributes: dict[str, str | float | int] = {}  # dữ liệu riêng theo loại (vd. số bậc, cột bảng)

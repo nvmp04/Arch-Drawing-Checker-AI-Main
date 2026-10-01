@@ -1,6 +1,6 @@
 # scripts/
 
-Script tiện ích cho phát triển. Chạy từ thư mục repo bằng `.venv/Scripts/python.exe`.
+Script tiện ích cho phát triển. Chạy từ thư mục repo bằng `python`.
 
 ## Xem kết quả ingest
 
@@ -9,8 +9,8 @@ Script tiện ích cho phát triển. Chạy từ thư mục repo bằng `.venv/
 **Thử nhanh một PDF cục bộ (không qua BE):**
 
 ```bash
-.venv/Scripts/python.exe scripts/inspect_ingest.py "D:/Downloads/tieuchuan/PN2.DN-Ban ve mau demo test AI.pdf"
-.venv/Scripts/python.exe scripts/inspect_ingest.py bản_vẽ.pdf --pages 4,12,37-39 --dpi 150 --open
+python scripts/inspect_ingest.py "D:/Downloads/tieuchuan/PN2.DN-Ban ve mau demo test AI.pdf"
+python scripts/inspect_ingest.py bản_vẽ.pdf --pages 4,12,37-39 --dpi 150 --open
 ```
 
 Ghi vào cùng thư mục `data/inspect/` (không commit), xuất hiện trong danh sách với nguồn `script`. Mở trực tiếp file `index.html` cũng được, không cần server.

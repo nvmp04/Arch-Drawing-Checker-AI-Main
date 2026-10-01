@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     inspect_enabled: bool = True
     inspect_dir: Path = Path("data/inspect")
     inspect_dpi: int = 110  # ảnh nền viewer; 0 = không render
+    # Bộ rule MOCK khi BE gửi `rules: []` (hợp đồng v0) — đợt thử rule engine. Để trống để tắt.
+    mock_ruleset: Path | None = Path("samples/criteria/ruleset-4sao.json")
 
 
 @lru_cache

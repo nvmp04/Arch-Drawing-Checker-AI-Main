@@ -26,12 +26,14 @@ class RuleInput(BaseModel):
 
 
 class NormalizedValue(BaseModel):
-    """Giá trị ngưỡng đã chuẩn hóa (mm hoặc %)."""
+    """Giá trị ngưỡng đã chuẩn hóa: độ dài về mm, độ dốc %, số đếm không đơn vị ("")."""
 
     unit: str
     min: float | None = None
     max: float | None = None
-    options: list[float] | None = None  # in-list; hoặc cặp kích thước
+    options: list[float] | None = None  # in-list
+    pair: list[float] | None = None  # "2.8 x 5.6m" → [2800, 5600]: từng chiều so theo toán tử
+    raw: str = ""  # chuỗi gốc, để hiển thị
 
 
 class CheckPlan(BaseModel):
@@ -46,3 +48,7 @@ class CheckPlan(BaseModel):
     operator: ComparisonOperator | None = None
     value: NormalizedValue | None = None
     page_kinds: list[str] = []  # loại trang cần tìm
+    # Mock bước diễn giải (Q-07): bảng khai báo trong rules/plan_table.py chọn checker cho dòng này.
+    checker: str | None = None  # None = chưa hỗ trợ → kết quả unknown
+    params: dict[str, str | int | float] = {}
+    note: str | None = None  # điều kiện áp dụng không kiểm được từ bản vẽ → kết quả pending

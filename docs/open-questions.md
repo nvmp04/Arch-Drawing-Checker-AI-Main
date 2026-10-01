@@ -16,3 +16,4 @@ Người dùng yêu cầu (2026-09-27): **không đào sâu nữa, để ngỏ.*
 | Q-10 | Kết quả theo `requirementLine` vs Finding của BE theo rule × trang | Cần BE thêm chỉ số dòng / nhiều bằng chứng. Xem `integration-contract.md` |
 | ~~Q-11~~ | Xác thực BE → MAIN | **Đã chốt → D-13** (`Authorization: Bearer`) |
 | Q-12 | Model cụ thể cho từng phần (bge-m3, PhoBERT, GNN trên nét vẽ…) | Chỉ là định hướng; chọn khi có dữ liệu và đo được |
+| Q-13 | **Comment của người kiểm tra có đầy đủ không** (ground truth) | Người dùng (2026-10-01) chưa xác định được; sẽ hỏi lại và cập nhật. Ảnh hưởng cách chấm benchmark: phát hiện không có comment = báo nhầm hay lỗi người kiểm tra bỏ sót. Ca cụ thể: trần **gỗ nhựa** FC-02 (mái đón, trang 3, 22–24, 43, 44) bị 5.1 đánh không đạt nhưng không có comment (research-log §8). Tạm thời: ghi riêng nhóm "không có comment", không tính là sai |

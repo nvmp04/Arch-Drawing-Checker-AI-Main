@@ -10,7 +10,7 @@ Hệ thống **Arch Drawing Checker** hỗ trợ soát bản vẽ kiến trúc n
 |---|---|---|---|---|
 | **FE** | `D:\Downloads\arch-drawing-checker-ai` | Next.js 16 (App Router), React 19, TS, Tailwind v4, TanStack Query, pdf.js, pdf-lib | Giao diện: hồ sơ thẩm định, viewer bản vẽ (pan/zoom, vẽ vùng khoanh), kết quả, bộ tiêu chí, dashboard | UI dựng bằng mock; đã nối thật: nạp Excel ở trang Tiêu chuẩn CHTK |
 | **BE** | `D:\Downloads\arch-drawing-checker-backend` | NestJS 11, TS, class-validator, Swagger, exceljs | API cho FE (`/api/v1`, cổng 4000), lưu trữ, điều phối phân tích, nhận callback từ MAIN | Khung 67 endpoint; chạy thật: `/health`, `POST rules/import` (Excel → JSON, chưa lưu CSDL), upload hồ sơ + dispatch sang MAIN + webhook callback (lưu bộ nhớ, chưa CSDL) |
-| **MAIN** | `D:\Downloads\arch-drawing-checker-main` (repo này) | Python 3.10, FastAPI | Lõi AI: đọc PDF vector, trích xuất, đối chiếu tiêu chí, trả kết quả + polygon bằng chứng | Bắt tay BE v0 chạy thật (nhận việc, tải PDF, đếm trang, callback); chưa logic phân tích |
+| **MAIN** | `D:\Downloads\arch-drawing-checker-main` (repo này) | Python ≥ 3.10, FastAPI | Lõi AI: đọc PDF vector, trích xuất, đối chiếu tiêu chí, trả kết quả + polygon bằng chứng | Bắt tay BE v0 chạy thật (nhận việc, tải PDF, đếm trang, callback); chưa logic phân tích |
 
 > Tên repo FE là `-ai` vì lịch sử đặt tên; **phần AI thật nằm ở MAIN**.
 > Tài liệu BE ghi FE nằm ở `C:\Users\LENOVO\Downloads\` — thực tế cả ba nằm ở `D:\Downloads\`.

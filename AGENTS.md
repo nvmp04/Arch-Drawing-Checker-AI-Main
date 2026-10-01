@@ -8,7 +8,7 @@
 
 ## 0. Trạng thái hiện tại — đọc dòng này đầu tiên
 
-**ĐÃ BẮT TAY VỚI BE (hợp đồng v0), CHƯA CÓ LOGIC PHÂN TÍCH.** Chạy thật: `GET /health`, `POST/GET/DELETE /v1/analyses` — nhận việc (Bearer token), tải PDF, đếm trang, gửi callback `extract` → `aggregate` với `findings: []`, hủy job. Đã kiểm chứng với BE thật (2026-09-28, `docs/progress/01-handshake.md`). **Ingest đã hiện thực và nằm trong luồng thật** (chữ + nét vẽ + layer CAD, D-14): BE gửi việc → MAIN tải PDF → ingest từng trang (callback tiến độ theo trang) → `aggregate` với `findings: []`. Kết quả ingest của mỗi job xem tại **`http://localhost:8000/debug/inspect/`** (D-15). Chưa gửi kết quả phân tích nào về BE. Các service phân tích khác vẫn ném `NotImplementedError`; `/v1/capabilities` trả `501`.
+**ĐÃ BẮT TAY VỚI BE (hợp đồng v0) + INGEST + RULE ENGINE KHÔNG AI (17% dòng tiêu chí). CHƯA GỬI KẾT QUẢ VỀ BE.** Chạy thật: `GET /health`, `POST/GET/DELETE /v1/analyses` — nhận việc (Bearer token), tải PDF, đếm trang, gửi callback `extract` → `aggregate` với `findings: []`, hủy job. Đã kiểm chứng với BE thật (2026-09-28, `docs/progress/01-handshake.md`). **Ingest đã hiện thực và nằm trong luồng thật** (chữ + nét vẽ + layer CAD, D-14): BE gửi việc → MAIN tải PDF → ingest từng trang (callback tiến độ theo trang) → `aggregate` với `findings: []`. Kết quả ingest của mỗi job xem tại **`http://localhost:8000/debug/inspect/`** (D-15). **Rule engine không AI đã chạy trong luồng thật** (D-16): extraction heuristic (cao độ, vế thang, bảng cửa) → checker → kết quả theo requirementLine, xem ở tab "Kiểm tra" của viewer. BE v0 gửi `rules: []` → MAIN dùng bộ rule mock `samples/criteria/ruleset-4sao.json`. **Tiêu chí vật liệu theo D-17 (2026-10-01, bước 1):** đọc bảng vật liệu hoàn thiện + ghi chú trần, checker 5.1 trần ngoài nhà — bắt đúng comment "cemboard" (research-log §8). Đi từng bước: luật trước, AI (embedding) sau. **Chưa gửi findings về BE** (`findings: []`). `semantic`, `geometry`, `sheets` chưa làm; `/v1/capabilities` trả `501`.
 
 Hợp đồng BE ↔ MAIN nguồn sự thật: `D:\Downloads\arch-drawing-checker-backend\docs\contracts\be-main.md` (v0).
 
@@ -50,7 +50,7 @@ Tài liệu của hai repo kia (đọc khi cần ghép nối):
 
 ## 3. Stack
 
-Python **3.10** · FastAPI · Pydantic v2 · pydantic-settings · PyMuPDF (đọc PDF vector) · httpx (gọi callback BE). Dự kiến sau: shapely (hình học), scikit-learn / PyTorch CPU, PhoBERT hoặc bge-m3 cho tiếng Việt. **Hỏi trước khi thêm thư viện lớn.**
+Python **≥ 3.10** (máy dev: 3.14 hệ thống) · FastAPI · Pydantic v2 · pydantic-settings · PyMuPDF (đọc PDF vector) · httpx (gọi callback BE). Dự kiến sau: shapely (hình học), scikit-learn / PyTorch CPU, PhoBERT hoặc bge-m3 cho tiếng Việt. **Hỏi trước khi thêm thư viện lớn.**
 
 ## 4. Cấu trúc — feature-based
 
@@ -80,20 +80,16 @@ Import một chiều: `features/*` → `common/*`, `infrastructure/*`, `config`;
 
 ## 5. Chạy trên máy phát triển hiện tại (Windows)
 
-Máy này **không có GPU**. Từ **2026-09-28** venv chạy được (trước đó Windows Application Control chặn `python.exe` trong venv — lỗi `os error 4551`). `.venv` đã tạo sẵn, cài `-e .[dev]`:
+Máy này **không có GPU**. Từ **2026-09-30** dự án chạy bằng **Python hệ thống (3.14)**, không dùng venv/uv — người dùng muốn gọi thẳng lệnh `python`. Gói đã cài bằng `pip install -e ".[dev]"`.
 
 ```bash
-# Git Bash, tại thư mục repo
-.venv/Scripts/python.exe -m uvicorn drawing_checker.app:app --port 8000
-.venv/Scripts/python.exe -m pytest
+# Tại thư mục repo
+python -m uvicorn drawing_checker.app:app --port 8000
+python -m pytest
 # Thêm phụ thuộc: sửa pyproject.toml rồi
-uv pip install --python .venv/Scripts/python.exe -e ".[dev]"
-# Tạo lại venv nếu mất: "$(uv python find 3.10)" -m venv .venv
+python -m pip install -e ".[dev]"
 ```
-Đừng gọi `python` trần — nó kích hoạt trình cài Python của Windows.
-
-Dự phòng nếu venv lại bị chặn: cài vào `.pydeps` và chạy bằng Python của uv —
-`uv pip install --python "$P" --target .pydeps -r pyproject.toml --extra dev` rồi `PYTHONPATH=".pydeps;src" "$P" -m pytest` (với `P=$(uv python find 3.10)`, PYTHONPATH ngăn bằng `;`).
+`python` trỏ tới `C:\Users\LENOVO\AppData\Local\Python\bin\python.exe`. Nếu terminal còn kích hoạt venv cũ (dấu `(.venv…)` ở prompt) thì chạy `deactivate` trước.
 
 Cổng mặc định **8000** — khớp `AI_SERVICE_URL=http://localhost:8000` bên BE.
 

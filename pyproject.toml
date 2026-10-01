@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "arch-drawing-checker-main"
 version = "0.0.1"
 description = "MAIN — lõi AI phân tích bản vẽ kiến trúc (PDF vector) đối chiếu tiêu chí CHTK"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 dependencies = [
   "fastapi>=0.115",
   "uvicorn>=0.30",

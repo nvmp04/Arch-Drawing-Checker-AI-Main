@@ -56,6 +56,29 @@
   .ly.solo { background: #fff6cc; }
   #hits { font-size: 12px; color: var(--muted); }
   .hint { color: var(--muted); font-size: 11px; }
+  body.wide { grid-template-columns: 480px 1fr 300px; }
+  #left { border-right: 1px solid var(--line); display: flex; flex-direction: column; overflow: hidden; }
+  #left .tabs { display: flex; border-bottom: 1px solid var(--line); }
+  #left .tabs button { flex: 1; border: 0; border-radius: 0; padding: 8px; background: var(--panel); cursor: pointer; }
+  #left .tabs button.on { box-shadow: inset 0 -2px var(--accent); font-weight: 600; }
+  #pages, #checks { overflow: auto; flex: 1; }
+  #pages { border-right: 0; }
+  #checks { padding: 8px 10px; }
+  .sum { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .chip { padding: 2px 8px; border-radius: 10px; font-size: 12px; border: 1px solid var(--line); background: #fafaf8; }
+  .cov { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .res { border: 1px solid var(--line); border-radius: 6px; padding: 8px; margin-bottom: 8px; background: #fff; }
+  .res .hd { display: flex; gap: 8px; align-items: baseline; }
+  .res .cd { font-weight: 600; }
+  .res .tt { color: var(--muted); font-size: 12px; }
+  .res .ln { margin: 4px 0; }
+  .res .kv2 { font-size: 12px; font-variant-numeric: tabular-nums; }
+  .res .why { font-size: 12px; color: #3a3a37; margin-top: 4px; }
+  .res .ev { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .res .ev button { font-size: 11px; padding: 1px 6px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; color: #fff; white-space: nowrap; }
+  .s-pass { background: #1a7f37; } .s-fail { background: #c62828; } .s-warning { background: #b26a00; }
+  .s-pending { background: #6b4fbb; } .s-unknown { background: #8a8a85; } .s-unsupported { background: #c4c4bf; color: #1d1d1b; }
 </style>
 </head>
 <body>
@@ -75,7 +98,11 @@
   <span id="hits"></span>
 </header>
 
-<aside id="pages"></aside>
+<aside id="left">
+  <div class="tabs"><button data-tab="pages" class="on">Trang</button><button data-tab="checks" id="checksTab">Kiểm tra</button></div>
+  <div id="pages"></div>
+  <div id="checks" hidden><span class="hint">Chưa có kết quả kiểm tra cho lần chạy này.</span></div>
+</aside>
 
 <main id="stage">
   <canvas id="cv"></canvas>
@@ -112,6 +139,7 @@ const state = {
   page: null, img: null, view: { s: 1, x: 0, y: 0 },
   hidden: new Set(), solo: null, hover: null, hits: [], hitIdx: -1,
   layerPaths: [], layerText: [],
+  evidence: [], checks: null,
 };
 const cache = new Map();
 const pending = new Map();
@@ -160,7 +188,7 @@ function addPoly(path, a, close) {
   if (close) path.closePath();
 }
 
-async function showPage(n) {
+async function showPage(n, focus = null) {
   state.want = n;
   $("loading").style.display = "block";
   try {
@@ -177,9 +205,11 @@ async function showPage(n) {
     $("pageSel").value = n;
     document.querySelectorAll(".pg").forEach((el) => el.classList.toggle("active", +el.dataset.n === n));
     document.querySelector(`.pg[data-n="${n}"]`)?.scrollIntoView({ block: "nearest" });
+    state.evidence = focus || [];
     renderStats(p); renderLayers(); runSearch(); fit();
+    if (focus && focus.length) zoomTo(focus);
     try { localStorage.setItem("ingest.page." + META.runId, n); } catch (e) {}
-    history.replaceState(null, "", "#p=" + n);
+    updateHash();
   } catch (e) {
     alert(e.message);
   } finally {
@@ -200,6 +230,14 @@ function fit() {
   state.view = { s, x: (r.width - p.w * s) / 2, y: (r.height - p.h * s) / 2 };
   state.autoFit = true;
   draw();
+}
+function zoomTo(boxes) {
+  const r = stage.getBoundingClientRect();
+  const x0 = Math.min(...boxes.map((b) => b[0])), y0 = Math.min(...boxes.map((b) => b[1]));
+  const x1 = Math.max(...boxes.map((b) => b[2])), y1 = Math.max(...boxes.map((b) => b[3]));
+  const pad = 60, s = Math.min(Math.max(Math.min((r.width - 2 * pad) / Math.max(x1 - x0, 1), (r.height - 2 * pad) / Math.max(y1 - y0, 1)), 0.5), 8);
+  state.view = { s, x: r.width / 2 - ((x0 + x1) / 2) * s, y: r.height / 2 - ((y0 + y1) / 2) * s };
+  state.autoFit = false; draw();
 }
 let raf = 0;
 function draw() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; paint(); }); }
@@ -239,6 +277,13 @@ function paint() {
   for (const i of state.hits) { const t = p.texts[i]; ctx.fillRect(t[0], t[1], t[2] - t[0], t[3] - t[1]); }
   if (state.hitIdx >= 0) outline(p.texts[state.hits[state.hitIdx]], "#e0000f", 3 * hair);
   if (state.hover !== null) outline(p.texts[state.hover], "#e0000f", 2 * hair);
+  // bằng chứng của kết quả kiểm tra đang chọn
+  for (const b of state.evidence) {
+    const m = 4 / v.s;
+    ctx.fillStyle = "rgba(255,90,0,.18)"; ctx.fillRect(b[0] - m, b[1] - m, b[2] - b[0] + 2 * m, b[3] - b[1] + 2 * m);
+    ctx.strokeStyle = "#ff5a00"; ctx.lineWidth = 2.5 * hair;
+    ctx.strokeRect(b[0] - m, b[1] - m, b[2] - b[0] + 2 * m, b[3] - b[1] + 2 * m);
+  }
 }
 function outline(t, color, w) {
   ctx.strokeStyle = color; ctx.lineWidth = w;
@@ -366,6 +411,70 @@ window.addEventListener("keydown", (e) => {
   else if (e.key === "f" || e.key === "F") fit();
 });
 
+// ---- tab Kiểm tra ----
+const STATUS_VI = { pass: "Đạt", fail: "Không đạt", warning: "Cảnh báo", pending: "Chờ người", unknown: "Không thấy dữ liệu", unsupported: "Chưa hỗ trợ" };
+document.querySelectorAll("#left .tabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+function setTab(tab) {
+  document.querySelectorAll("#left .tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === tab));
+  $("pages").hidden = tab !== "pages"; $("checks").hidden = tab !== "checks";
+  document.body.classList.toggle("wide", tab === "checks");
+  state.tab = tab; updateHash();
+}
+function updateHash() {
+  const parts = [];
+  if (state.page) parts.push("p=" + state.page.n);
+  if (state.tab === "checks") parts.push("tab=checks");
+  history.replaceState(null, "", "#" + parts.join("&"));
+}
+window.__ingestChecks = (data) => { state.checks = data; renderChecks(); };
+function statusOf(r) { return r.supported ? r.status : "unsupported"; }
+function renderChecks() {
+  const c = state.checks; if (!c) return;
+  const rows = c.rows, cov = c.coverage;
+  const counts = {}; rows.forEach((r) => { const k = statusOf(r); counts[k] = (counts[k] || 0) + 1; });
+  $("checksTab").textContent = `Kiểm tra (${(counts.pass || 0)}✓ ${(counts.fail || 0)}✗)`;
+  const filter = $("checks").querySelector("select")?.value || "checked";
+  const shown = rows.filter((r) => filter === "all" || (filter === "checked" ? r.supported : statusOf(r) === filter));
+  const order = { fail: 0, warning: 1, pending: 2, pass: 3, unknown: 4, unsupported: 5 };
+  shown.sort((a, b) => order[statusOf(a)] - order[statusOf(b)]);
+  $("checks").innerHTML = `
+    <div class="sum">${Object.keys(order).filter((k) => counts[k]).map((k) => `<span class="chip"><span class="badge s-${k}">${counts[k]}</span> ${STATUS_VI[k]}</span>`).join("")}</div>
+    <div class="cov">Nguồn rule: ${esc(c.source)} · loại nhà ${esc(c.houseType)} · nhóm ${esc(c.categories.join(", "))}<br>
+      ${cov.rulesApplicable}/${cov.rulesTotal} rule áp dụng · ${cov.linesSupported}/${cov.linesApplicable} dòng tiêu chí có checker ·
+      thực thể: ${Object.entries(c.entities).map(([k, v]) => `${k} ${v}`).join(", ") || "—"}</div>
+    <label class="hint">Hiện <select>
+      ${[["checked", "Đã kiểm (có checker)"], ["all", "Tất cả dòng"], ...Object.keys(order).map((k) => [k, STATUS_VI[k]])]
+        .map(([v, t]) => `<option value="${v}" ${v === filter ? "selected" : ""}>${t}</option>`).join("")}
+    </select></label>
+    ${shown.map((r, i) => resultCard(r, rows.indexOf(r))).join("") || '<p class="hint">Không có dòng nào.</p>'}`;
+  $("checks").querySelector("select").onchange = renderChecks;
+}
+function resultCard(r, idx) {
+  const st = statusOf(r);
+  const pages = {};
+  r.evidence.forEach((e) => { (pages[e.page] = pages[e.page] || []).push(e.bbox); });
+  return `<div class="res">
+    <div class="hd"><span class="badge s-${st}">${STATUS_VI[st]}</span><span class="cd">${esc(r.code)}</span>
+      <span class="tt">${esc([...r.headings, r.title].filter(Boolean).join(" › "))}</span></div>
+    <div class="ln">${esc(r.lineText)}</div>
+    ${r.supported ? `<div class="kv2">Trích: <b>${esc(r.extracted ?? "—")}</b> · Chuẩn: <b>${esc(r.standard ?? "—")}</b> · tin cậy ${r.confidence.toFixed(2)}</div>` : ""}
+    <div class="why">${esc(r.reason)}</div>
+    ${Object.keys(pages).length ? `<div class="ev">${Object.entries(pages).map(([pg, boxes]) =>
+      `<button data-r="${idx}" data-p="${pg}" title="Xem bằng chứng trên trang ${pg}">tr.${pg}${boxes.length > 1 ? " ×" + boxes.length : ""}</button>`).join("")}</div>` : ""}
+  </div>`;
+}
+$("checks").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-r]"); if (!b) return;
+  const r = state.checks.rows[+b.dataset.r], pg = +b.dataset.p;
+  if (!META.pages.some((p) => p.n === pg)) { alert(`Trang ${pg} không có trong lần xuất này.`); return; }
+  showPage(pg, r.evidence.filter((ev) => ev.page === pg).map((ev) => ev.bbox));
+});
+(function loadChecks() {
+  const s = document.createElement("script");
+  s.src = "checks.js"; s.onerror = () => {};
+  document.head.appendChild(s);
+})();
+
 // ---- khởi động ----
 const who = META.reviewId ? `hồ sơ ${META.reviewId} · ${META.houseType || ""}` : (META.fileName || META.runId);
 $("file").textContent = `${who} · ${META.pages.length}/${META.pageCount} trang · ${META.createdAt} · ${META.status} (${META.totalSeconds}s)`;
@@ -382,6 +491,7 @@ let start = META.pages[0].n;
 try { const saved = +localStorage.getItem("ingest.page." + META.runId); if (META.pages.some((p) => p.n === saved)) start = saved; } catch (e) {}
 const fromHash = +(location.hash.match(/p=(\d+)/) || [])[1];
 if (META.pages.some((p) => p.n === fromHash)) start = fromHash;
+if (/tab=checks/.test(location.hash)) setTab("checks");
 showPage(start);
 </script>
 </body>
