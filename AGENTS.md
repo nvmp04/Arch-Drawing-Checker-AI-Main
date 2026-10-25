@@ -33,6 +33,7 @@ Kiến trúc đã được **thảo luận và chốt ở mức khung** (phiên 
 | 8b2 | `docs/drawing-knowledge.md` | **Tri thức nhận dạng đối tượng bản vẽ** (hình học + chữ + quan hệ; layer chỉ là gợi ý, có kiểm chéo) — đối tác xác nhận, thuật toán `geometry` / `extraction` theo file này |
 | 8c | `docs/online-rollout.md` | **Đưa hệ thống lên mạng (cả 3 repo):** hạ tầng đã chốt (D-21), các giai đoạn, tiến độ — cập nhật sau mỗi bước |
 | 8c2 | `docs/deploy-review.md` | **Viewer chấm kết quả AI cho đối tác trên Render + Neon / Oracle** (D-24): chế độ `MAIN_REVIEW_ONLY` + mật khẩu, cài / cập nhật / kéo kết quả chấm về |
+| 8c3 | `docs/agent-eval.md` | **Chạy eval AI bằng agent đóng vai model** (không tốn tiền API, không sửa code): model đọc xong là chạy eval cho một PDF, 5 bước |
 | 9 | `docs/roadmap.md` | Sẽ làm gì, theo thứ tự nào |
 | 10 | `docs/progress/*.md` | Nhật ký từng giai đoạn |
 
