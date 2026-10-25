@@ -8,3 +8,7 @@ __pycache__/
 data/
 *.pdf
 !samples/**/*.json
+dist/
+
+# Lịch sử cục bộ của VS Code (có bản sao .env)
+.history/

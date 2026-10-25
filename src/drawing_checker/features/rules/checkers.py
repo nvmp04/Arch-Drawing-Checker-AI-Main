@@ -14,8 +14,6 @@ from drawing_checker.common.geometry import Point, Polygon, Precision
 from drawing_checker.features.extraction.schemas import Entity, EntityKind
 from drawing_checker.features.findings.schemas import Evidence, EvidenceRole, LineResult
 from drawing_checker.features.rules.evaluator import at_threshold, compare, describe
-from drawing_checker.features.rules.materials import find_materials, main_material
-from drawing_checker.features.rules.materials import label as material_label
 from drawing_checker.features.rules.schemas import CheckPlan, RuleInput
 
 MAX_EVIDENCE_PAGES = 4  # cùng một số liệu lặp trên nhiều trang → giữ vài trang làm bằng chứng
@@ -335,105 +333,6 @@ def _opening_evidence(e: Entity) -> list[Evidence]:
     return evidence
 
 
-# ------------------------------------------------------------------ vật liệu trần ngoài nhà (5.1)
-
-# Yêu cầu hoàn thiện của dòng (params.finish) → (từ khóa phải có, mẫu chi tiết để coi là đạt hẳn).
-FINISH_REQUIREMENTS: dict[str, tuple[str, str, re.Pattern | None]] = {
-    "plaster": ("trát vữa", "TRÁT", re.compile(r"\b15\s*MM|DÀY\s*15")),
-    "paint": ("sơn nước", "SƠN", None),
-}
-
-
-def check_exterior_ceiling(rule_plans: list[tuple[RuleInput, list[CheckPlan]]], ctx: CheckContext) -> list[LineResult]:
-    """Trần ngoài nhà (5.1.x): vật liệu trần trên bản vẽ phải thuộc loại tiêu chí cho phép.
-
-    Nguồn: dòng bảng "VẬT LIỆU HOÀN THIỆN TRẦN" + ghi chú có chữ "TRẦN". Vật liệu được phép suy ra từ câu tiêu chí
-    (hoặc tên rule khi dòng không nêu vật liệu, vd. 5.1.2 "Trần bê tông") bằng cùng từ điển `materials`.
-    Phạm vi "ngoài nhà" lấy từ gợi ý của trang; không có gợi ý → hạ tin cậy (không kết luận fail).
-    Mỗi loại vật liệu một kết quả, bằng chứng là mọi chỗ ghi (bảng + ghi chú) trên các trang.
-    """
-    pairs = [(rule, plan) for rule, plans in rule_plans for plan in plans]
-    material_lines = [(rule, plan) for rule, plan in pairs if find_materials(plan.text)]
-    finish_lines = [(rule, plan) for rule, plan in pairs if plan.params.get("finish")]
-    allowed_by_rule: dict[str, set[str]] = defaultdict(set)
-    for rule, plan in pairs:
-        allowed_by_rule[rule.code or rule.rule_id].update(find_materials(plan.text) or find_materials(rule.title or ""))
-    allowed = set().union(*allowed_by_rule.values())
-    standard = "; ".join(f"{code}: {', '.join(material_label(k) for k in sorted(keys))}"
-                         for code, keys in allowed_by_rule.items() if keys)
-    first_line = (material_lines or pairs)[0][1]
-
-    groups: dict[str, list[Entity]] = defaultdict(list)
-    for e in ctx.entities:
-        if e.attributes.get("surface") != "ceiling" or e.kind not in (EntityKind.FINISH, EntityKind.CALLOUT):
-            continue
-        text = str(e.attributes.get("description") or e.text or "")
-        material = main_material(text)
-        if material is None and e.kind == EntityKind.CALLOUT:
-            continue  # ghi chú nhắc "trần" mà không nêu vật liệu (tên hình, cao độ trần…) — không phải bằng chứng
-        groups[material or "unknown"].append(e)
-    if not groups:
-        return [_unknown(plans[0], "Không tìm thấy vật liệu trần (bảng 'VẬT LIỆU HOÀN THIỆN TRẦN' hoặc ghi chú) trên bản vẽ.")
-                for _, plans in rule_plans if plans]
-
-    results = []
-    for material, items in groups.items():
-        evidence = _annotation_evidence(items)
-        pages = ", ".join(str(p) for p in sorted({e.page_number for e in items}))
-        codes = sorted({e.label for e in items if e.label})
-        subject = ", ".join(codes + (["ghi chú chi tiết"] if any(e.kind == EntityKind.CALLOUT for e in items) else []))
-        hints = sorted({str(e.attributes["exterior"]) for e in items if e.attributes.get("exterior")})
-        confidence = 0.9 if hints else 0.7
-        scope = (f"Phạm vi ngoài nhà: trang có ghi '{', '.join(hints)}'." if hints
-                 else "Không thấy dấu hiệu 'ngoài nhà' trên trang — cần xác nhận phạm vi.")
-        where = f"{subject} — trang {pages}"
-        if material in ("unknown", "raw"):
-            sample = str(items[0].attributes.get("description") or items[0].text)
-            results.append(_result(first_line, FindingStatus.PENDING, confidence,
-                                   f"Trần ghi '{sample}' ({where}): không nêu vật liệu trần, cần người xem. {scope}",
-                                   sample, standard, evidence))
-            continue
-        if material not in allowed:
-            results.append(_result(first_line, FindingStatus.FAIL, confidence,
-                                   f"Trần ngoài nhà dùng {material_label(material)} ({where}). Không thuộc vật liệu CHTK "
-                                   f"cho phép ({standard}) — không đạt ở mọi vùng áp dụng. {scope}",
-                                   material_label(material), standard, evidence))
-            continue
-        board_lines = [(r, p) for r, p in material_lines if material in find_materials(p.text)]
-        if board_lines:
-            # Đúng loại tấm; độ dày / chống ẩm / vùng (biển – đồng bằng) chưa kiểm được từ mô tả → người xem.
-            rule, plan = board_lines[0]
-            results.append(_result(plan, FindingStatus.PENDING, confidence,
-                                   f"Trần {material_label(material)} ({where}) đúng loại vật liệu của {rule.code}; "
-                                   f"chưa kiểm được độ dày, chống ẩm và vùng áp dụng. {scope}",
-                                   material_label(material), plan.text, evidence))
-            continue
-        text = " ".join(str(e.attributes.get("description") or e.text) for e in items).upper()
-        for rule, plan in finish_lines:
-            if material not in find_materials(rule.title or ""):
-                continue
-            name, keyword, detail = FINISH_REQUIREMENTS[str(plan.params["finish"])]
-            base = f"Trần {material_label(material)} ({where}) đúng loại của {rule.code}"
-            if keyword not in text:
-                status, reason = FindingStatus.PENDING, f"{base}; không thấy ghi {name} — cần người xem."
-            elif detail is not None and not detail.search(text):
-                status, reason = FindingStatus.PENDING, f"{base}; có ghi {name} nhưng không ghi chi tiết để đối chiếu '{plan.text}'."
-            else:
-                status, reason = FindingStatus.PASS, f"{base}; có ghi {name}."
-            results.append(_result(plan, status, confidence, f"{reason} {scope}", material_label(material), plan.text, evidence))
-    return results
-
-
-def _annotation_evidence(items: list[Entity]) -> list[Evidence]:
-    seen, out = set(), []
-    for e in items:
-        key = (e.page_number, e.text)
-        if key not in seen:
-            seen.add(key)
-            out.append(_evidence(e, EvidenceRole.ANNOTATION))
-    return out
-
-
 # ------------------------------------------------------------------ đăng ký
 
 LINE_CHECKERS: dict[str, Callable[[CheckPlan, RuleInput, CheckContext], list[LineResult]]] = {
@@ -446,7 +345,6 @@ LINE_CHECKERS: dict[str, Callable[[CheckPlan, RuleInput, CheckContext], list[Lin
 # Checker cần nhìn nhiều rule cùng lúc (danh mục trải trên 1.4.1–1.4.5).
 GROUP_CHECKERS: dict[str, Callable[[list[tuple[RuleInput, list[CheckPlan]]], CheckContext], list[LineResult]]] = {
     "opening_catalog": check_opening_catalog,
-    "exterior_ceiling": check_exterior_ceiling,
 }
 
 

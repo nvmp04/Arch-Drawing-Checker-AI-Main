@@ -50,21 +50,52 @@ class BoundingBox(BaseModel):
     height: float = Field(ge=0, le=100)
 
 
-class RawFinding(BaseModel):
-    """Payload gửi BE. Các trường BE hiện có + trường MAIN đề xuất thêm (L-02, L-03, L-04)."""
+class Applicability(str, Enum):
+    APPLIES = "applies"
+    NOT_APPLICABLE = "not-applicable"  # không áp dụng cho hồ sơ này — gửi kèm status "unknown" (Không xác định)
+    UNKNOWN = "unknown"  # chưa kiểm được (chưa hỗ trợ / thiếu dữ liệu)
 
-    rule_id: str = Field(alias="ruleId")
-    status: FindingStatus
-    severity: FindingSeverity | None = None  # BE đang bắt buộc — Q-09
-    extracted_value: str = Field(alias="extractedValue")
-    standard_value: str = Field(alias="standardValue")
-    confidence: float = Field(ge=0, le=1)
-    check_type: CheckType | None = Field(default=None, alias="checkType")  # D-08
+
+class BackendEvidence(BaseModel):
+    """Một bằng chứng gửi BE: trang + bbox % (Q-01)."""
+
     page_number: int = Field(ge=1, alias="pageNumber")
     bounding_box: BoundingBox = Field(alias="boundingBox")
-    # Đề xuất thêm — BE chưa có:
-    line_index: int | None = Field(default=None, alias="lineIndex")
-    reason: str | None = None
-    evidence: list[Evidence] = []
+    role: EvidenceRole
+    text: str | None = None
+
+    model_config = {"populate_by_name": True}
+
+
+class RuleSnapshot(BaseModel):
+    """Bản chụp rule kèm mỗi finding — BE chưa lưu bộ tiêu chí (L-01) nên không tra được rule theo `ruleId`."""
+
+    code: str | None = None
+    parent_code: str | None = Field(default=None, alias="parentCode")
+    title: str = ""
+    requirement_line: str = Field(default="", alias="requirementLine")
+
+    model_config = {"populate_by_name": True}
+
+
+class RawFinding(BaseModel):
+    """Payload gửi BE — `RawFindingV1` (integration-contract.md §5.3): một phần tử = một dòng tiêu chí."""
+
+    main_result_id: str = Field(alias="mainResultId")  # "<jobId>:<ruleId>:<lineIndex>:<k>" — ghép dữ liệu huấn luyện
+    rule_id: str = Field(alias="ruleId")
+    line_index: int = Field(ge=0, alias="lineIndex")
+    rule: RuleSnapshot
+    status: FindingStatus  # không bao giờ APPROVED
+    applicability: Applicability
+    severity: FindingSeverity | None = None  # Q-09: MAIN không gửi, BE tự gán
+    check_type: CheckType | None = Field(default=None, alias="checkType")  # D-08
+    confidence: float = Field(ge=0, le=1)
+    extracted_value: str | None = Field(default=None, alias="extractedValue")
+    standard_value: str | None = Field(default=None, alias="standardValue")
+    reason: str
+    # Bằng chứng chính — None khi dòng không có bằng chứng định vị (không áp dụng, chưa hỗ trợ…).
+    page_number: int | None = Field(default=None, ge=1, alias="pageNumber")
+    bounding_box: BoundingBox | None = Field(default=None, alias="boundingBox")
+    evidence: list[BackendEvidence] = []
 
     model_config = {"populate_by_name": True}

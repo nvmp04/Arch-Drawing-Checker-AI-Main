@@ -6,6 +6,7 @@ from drawing_checker.common.security import require_service_token
 from drawing_checker.config import get_settings
 from drawing_checker.features.analyses.schemas import AnalysisStatus, DispatchRequest, DispatchResult
 from drawing_checker.features.analyses.service import AnalysesService, JobNotFound
+from drawing_checker.features.semantic.factory import build_semantic
 from drawing_checker.infrastructure.backend_client import BackendClient
 from drawing_checker.infrastructure.job_runner import JobRunner
 from drawing_checker.infrastructure.pdf_fetcher import PdfFetcher
@@ -25,6 +26,8 @@ def get_analyses_service() -> AnalysesService:
         inspect_dpi=settings.inspect_dpi,
         mock_ruleset=settings.mock_ruleset,
         confidence_threshold=settings.confidence_threshold,
+        semantic=build_semantic(settings),
+        ai_include_numeric=settings.ai_include_numeric,
     )
 
 

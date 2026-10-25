@@ -9,15 +9,13 @@ Mỗi rule: {chỉ số dòng | "*": {checker, target, attribute, params?, note?
 - Dòng / rule không có trong bảng → `unknown` "chưa hỗ trợ" (đo độ phủ).
 
 Phạm vi đợt đầu (người dùng chốt 2026-09-30): các họ đã chứng minh ở research-log §4.
-Đợt 2 (2026-10-01): 5.1 trần ngoài nhà — tiêu chí vật liệu, tìm theo phạm vi rule (D-17).
+⚠ GIỚI HẠN (D-18, 2026-10-02): bảng này viết tay theo MÃ RULE của bộ 4 SAO mẫu — không sinh ra khi chạy, không phải
+thuật toán. Nạp bộ tiêu chí khác: rule trùng mã vẫn bị áp cách hiểu ở đây, rule mã khác → "chưa hỗ trợ".
+KHÔNG thêm vào bảng này các dòng diễn giải câu chữ (vật liệu, cấu tạo, "không thực hiện…"): phần đó là ngữ nghĩa,
+phải do bước diễn giải luật (AI, Q-07) sinh ra. Các checker ngữ nghĩa viết cứng đã bị gỡ ngày 2026-10-02.
 """
 
 from drawing_checker.features.rules.schemas import RuleInput
-
-
-def _ceiling(**params: str) -> dict:
-    """Dòng tiêu chí trần ngoài nhà (5.1.x) — một checker nhóm xét mọi vật liệu trần tìm được (D-17)."""
-    return {"checker": "exterior_ceiling", "target": "trần ngoài nhà", "attribute": "vật liệu", "params": params}
 
 
 def _catalog(opening: str, mechanism: str) -> dict:
@@ -46,9 +44,6 @@ PLAN_TABLE: dict[str, dict[int | str, dict]] = {
     "1.4.3": {"*": _catalog("window", "swing")},
     "1.4.4": {"*": _catalog("window", "sliding")},
     "1.4.5": {"*": _catalog("window", "fixed")},
-    # 5.1 Trần ngoài nhà (D-17, đợt 2): vật liệu trần. Dòng khung / bước khung / ty treo (5.1.1 dòng 2–4) chưa hỗ trợ.
-    "5.1.1": {0: _ceiling(region="sea"), 1: _ceiling(region="plain")},
-    "5.1.2": {0: _ceiling(finish="plaster"), 1: _ceiling(finish="paint")},
 }
 
 

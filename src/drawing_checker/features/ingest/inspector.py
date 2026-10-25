@@ -63,6 +63,18 @@ class IngestInspector:
         self.meta["checks"] = {"source": payload.get("source"), **payload.get("coverage", {})}
         self._save_meta()
 
+    def write_dossier(self, payload: dict) -> None:
+        """Mục lục hồ sơ cho tab "Hồ sơ" (payload do `analyses` dựng). Tên trang trong danh sách lấy theo khung tên."""
+        (self.dir / "dossier.js").write_text(
+            f"window.__ingestDossier({json.dumps(payload, ensure_ascii=False, separators=(',', ':'))});",
+            encoding="utf-8",
+        )
+        names = {s["n"]: s["name"] for s in payload.get("sheets", []) if s.get("name")}
+        for page in self.meta["pages"]:
+            if page["n"] in names:
+                page["title"] = names[page["n"]]
+        self._save_meta()
+
     def finish(self, status: str = "completed", error: str | None = None) -> Path:
         """Chốt lần chạy: ghi viewer (kể cả khi lỗi giữa chừng — xem được các trang đã xong)."""
         self.meta.update(status=status, totalSeconds=round(time.perf_counter() - self._started, 1))

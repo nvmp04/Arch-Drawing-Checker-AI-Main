@@ -173,11 +173,11 @@ def test_unmapped_lines_reported_as_unsupported() -> None:
     assert all(x.status == FindingStatus.UNKNOWN for x in unsupported)
 
 
-# ------------------------------------------------------------------ vật liệu hoàn thiện (D-17)
+# ------------------------------------------------------------------ đọc bảng trên bản vẽ (không phụ thuộc bộ tiêu chí)
 
 
 def ceiling_page(n: int = 44) -> DrawingPage:
-    """Bảng "VẬT LIỆU HOÀN THIỆN TRẦN" như PN2 trang 44 (mô tả lệch dọc nhẹ so với mã) + ghi chú xếp chồng."""
+    """Bảng "VẬT LIỆU HOÀN THIỆN TRẦN" như PN2 trang 44 (mô tả lệch dọc nhẹ so với mã)."""
     texts = [span("VẬT LIỆU HOÀN THIỆN", 1171, 905, 110, 11), span("TRẦN", 1292, 905, 25, 11),
              span("KÝ HIỆU", 1083, 927, 35), span("MÔ TẢ", 1231, 927, 25),
              span("FC-01", 1103, 945, 25), span("TRẦN CEMBOARD HOÀN THIỆN SƠN NƯỚC MÀU TRẮNG", 1137, 944, 190),
@@ -188,27 +188,56 @@ def ceiling_page(n: int = 44) -> DrawingPage:
     return DrawingPage(page_number=n, width=1445, height=1162, rotation=0, texts=texts)
 
 
-def test_finish_table_rows_and_stacked_callouts() -> None:
+def test_finish_table_rows() -> None:
     entities = ExtractionService().extract(ceiling_page())
     rows = {e.label: e for e in entities if e.kind.value == "finish"}
     assert rows["FC-01"].attributes["description"] == "TRẦN CEMBOARD HOÀN THIỆN SƠN NƯỚC MÀU TRẮNG"
-    assert rows["FC-01"].attributes["surface"] == "ceiling" and rows["FC-01"].attributes["exterior"]
-    callouts = [e.text for e in entities if e.kind.value == "callout"]
-    assert "HỆ KHUNG TRẦN TẤM CEMBOARD" in callouts
-    assert not any("ĐÈN" in c or c.startswith("TRẦN CEMBOARD") for c in callouts)  # không lấy lại chữ trong bảng
+    assert rows["FC-02"].attributes["description"] == "TRẦN BÊ TÔNG TRÁT VỮA HOÀN THIỆN SƠN NƯỚC"
+    assert rows["FC-01"].attributes["surface"] == "ceiling"
 
 
-def test_exterior_ceiling_material_from_rule_text() -> None:
-    _, r = run([ceiling_page()])
-    fail = next(x for x in r["5.1.1"] if x.status == FindingStatus.FAIL)
-    assert "cemboard" in fail.extracted_value and "thạch cao" in fail.standard_value
-    assert {e.text for e in fail.evidence} >= {"FC-01 TRẦN CEMBOARD HOÀN THIỆN SƠN NƯỚC MÀU TRẮNG", "HỆ KHUNG TRẦN TẤM CEMBOARD"}
-    concrete = {x.line_index: x.status for x in r["5.1.2"]}
-    assert concrete == {0: FindingStatus.PENDING, 1: FindingStatus.PASS}  # có trát nhưng không ghi M75 / 15 mm; có sơn
+def test_door_table_glass_thickness_is_extracted() -> None:
+    page = door_page()
+    page.texts.append(span("Kính trong cường lực dày 8mm, mài cạnh", 194, 643, 150))
+    doors = {e.label: e for e in ExtractionService().extract(page) if e.kind.value == "opening"}
+    assert doors["DR-01"].attributes["glass_mm"] == 8 and "glass_mm" not in doors["DR-03"].attributes
 
 
-def test_ceiling_without_exterior_hint_is_not_failed() -> None:
-    page = ceiling_page()
-    page.texts = [t for t in page.texts if "MÁI ĐÓN" not in t.text and "NGOẠI THẤT" not in t.text]
-    _, r = run([page])
-    assert not any(x.status == FindingStatus.FAIL for x in r["5.1.1"])  # 0.7 < 0.8 → warning
+def test_semantic_lines_are_unsupported_not_hardcoded() -> None:
+    """D-18: tiêu chí chữ / vật liệu / cấu tạo không được diễn giải bằng bảng viết tay → luôn "chưa hỗ trợ"."""
+    _, r = run([ceiling_page(), assembly_page(), door_page()])
+    for key in ("5.1.1", "5.1.2", "4.2.1*", "4.2.4", "4.2.5*", "4.5.3", "4.5.5*", "4.4.1", "1.4"):
+        assert r[key] and all(x.reason == UNSUPPORTED_REASON for x in r[key]), key
+
+
+def assembly_page(roof_waterproof: str = "LỚP CHỐNG THẤM GỐC PU CUỐN LÊN CHÂN", rebar: str = "D6@200") -> DrawingPage:
+    """ "BẢNG THỐNG KÊ CẤU TẠO SÀN" như PN2 trang 5: mã, vị trí, các lớp (có lớp ghi trên hai dòng)."""
+    texts = [span("KÍ HIỆU", 114, 52, 40, 12), span("VỊ TRÍ", 187, 52, 40, 12), span("CHI TIẾT", 332, 53, 50, 12),
+             span("MÔ TẢ CÁC LỚP CẤU TẠO", 485, 52, 150, 12), span("TẦNG 1", 54, 130, 40, 12), span("MÁI", 54, 330, 30, 12)]
+    rows = [
+        ("F1.2", "SÀN NỘI THẤT", 170, ["SÀN BTCT( xem BVKC)", "LỚP BÊ TÔNG LÓT( xem BVKC)",
+                                        "ĐẤT TỰ NHIÊN ĐẦM CHẶT XỬ LÍ", "CHỐNG MỐI ĐỒNG THỜI"]),
+        ("F2.2", "BAN CÔNG", 250, ["GẠCH PORCELAIN CHỐNG TRƯỢT HOÀN THIỆN", "LỚP VỮA CÁN NỀN M75 ĐÁNH DỐC VỀ RÃNH THU",
+                                   "LỚP CHỐNG THẤM CUỐN LÊN CHÂN TƯỜNG 300mm", "SÀN BTCT( xem BVKC)"]),
+        ("F3.1", "SÀN MÁI", 330, ["LỚP VỮA TẠO PHẲNG DÀY 10MM", f"LỚP BÊ TÔNG ĐÁ MI M200, LƯỚI THÉP {rebar},",
+                                  "DÀY MIN 50mm, TẠO DỐC 1.5% VỀ PHỄU THU", roof_waterproof, "TƯỜNG 300mm",
+                                  "SÀN BTCT( xem BVKC)"]),
+    ]
+    for code, location, y, layers in rows:
+        texts += [span(code, 126, y + 10, 20, 8), span(location, 172, y + 8, 70, 12)]
+        texts += [span("·", 478, y + 10.5 * i, 3, 8) for i in range(len(layers))]
+        texts += [span(layer, 486, y + 10.5 * i, 200, 8) for i, layer in enumerate(layers)]
+    for t in texts:
+        t.size = 8.0 if t.polygon.points[2].y - t.polygon.points[0].y < 10 else 14.0
+    return DrawingPage(page_number=5, width=1445, height=1162, rotation=0, texts=texts)
+
+
+def test_floor_assembly_table_rows_and_multiline_layers() -> None:
+    layers = [e for e in ExtractionService().extract(assembly_page()) if e.attributes.get("table") == "floor-assembly"]
+    roof = [e.text for e in layers if e.label == "F3.1"]
+    assert roof == ["LỚP VỮA TẠO PHẲNG DÀY 10MM",
+                    "LỚP BÊ TÔNG ĐÁ MI M200, LƯỚI THÉP D6@200, DÀY MIN 50mm, TẠO DỐC 1.5% VỀ PHỄU THU",
+                    "LỚP CHỐNG THẤM GỐC PU CUỐN LÊN CHÂN TƯỜNG 300mm", "SÀN BTCT( xem BVKC)"]
+    ground = next(e for e in layers if e.label == "F1.2")
+    assert ground.attributes["location"] == "SÀN NỘI THẤT" and ground.attributes["group"] == "TẦNG 1"
+    assert [e.text for e in layers if e.label == "F2.2"][0] == "GẠCH PORCELAIN CHỐNG TRƯỢT HOÀN THIỆN"

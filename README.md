@@ -2,7 +2,7 @@
 
 Lõi AI (Python, FastAPI) của hệ thống Arch Drawing Checker: đọc bản vẽ kiến trúc PDF vector, đối chiếu tiêu chí CHTK, trả kết quả kèm polygon bằng chứng cho backend NestJS.
 
-> **Trạng thái:** đã bắt tay với BE (hợp đồng v0), ingest PDF và rule engine không AI (đợt đầu, ~16% dòng tiêu chí) chạy trong luồng thật. Kết quả kiểm tra mới xem ở viewer debug, **chưa gửi findings về BE**. Chi tiết: [`AGENTS.md`](AGENTS.md) §0.
+> **Trạng thái:** đã bắt tay với BE (hợp đồng v0), ingest PDF và rule engine không AI cho **tiêu chí số** (6 checker, ~16% dòng tiêu chí) chạy trong luồng thật. Bảng nối rule → checker hiện viết tay theo bộ tiêu chí mẫu 4 SAO, **chưa tổng quát cho file tiêu chí khác** (xem `docs/checkers.md`). Kết quả kiểm tra mới xem ở viewer debug, **chưa gửi findings về BE**. Chi tiết: [`AGENTS.md`](AGENTS.md) §0.
 
 ## Yêu cầu
 

@@ -63,8 +63,18 @@ def test_doors_not_in_catalog_match_reviewer_comments(results) -> None:
     assert {e.page_number for r in doors for e in r.evidence} == {47, 48}
 
 
-def test_exterior_ceiling_cemboard_matches_reviewer_comments(results) -> None:
-    """Người kiểm tra comment trần ngoài nhà ở trang 4, 6, 44 (cemboard thay vì thạch cao chống ẩm 9mm)."""
-    cemboard = next(r for r in results["5.1.1"] if r.extracted_value and "cemboard" in r.extracted_value)
-    assert cemboard.status == FindingStatus.FAIL
-    assert {4, 6, 44} <= {e.page_number for e in cemboard.evidence}
+def test_ingest_decodes_vni_and_joins_split_runs() -> None:
+    """Trang 4: chữ font VNI ("LÔÙP VÖÕA") và dòng bị tách ("L" + "ỚP CHỐNG THẤM CAO 200") — research-log §9."""
+    texts = {t.text for t in IngestService().load_text(PDF, 4).texts}
+    assert {"LỚP VỮA XI MĂNG M.75 DÀY 20", "LỚP CHỐNG THẤM CAO 200", "LEN TƯỜNG ỐP GẠCH"} <= texts
+    assert not any(t.startswith(("ỚP ", "ƯỜNG ")) for t in texts)
+
+
+def test_drawing_tables_are_read(results) -> None:
+    """Đọc bảng trên bản vẽ (không phụ thuộc bộ tiêu chí): vật liệu hoàn thiện, cấu tạo sàn — research-log §8, §10."""
+    doc = IngestService().open(PDF)
+    entities = [e for page in (doc.pages[2], doc.pages[4]) for e in ExtractionService().extract(page)]
+    finishes = {e.label: e.attributes["description"] for e in entities if e.kind.value == "finish"}
+    assert finishes["FC-01"] == "TRẦN CEMBOARD HOÀN THIỆN SƠN NƯỚC MÀU TRẮNG"
+    roof = [e.text for e in entities if e.attributes.get("table") == "floor-assembly" and e.label == "F3.1"]
+    assert roof[2] == "LỚP CHỐNG THẤM GỐC PU CUỐN LÊN CHÂN TƯỜNG 300mm"

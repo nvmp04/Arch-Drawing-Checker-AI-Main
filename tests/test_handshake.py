@@ -140,12 +140,25 @@ def test_happy_path_ingests_pages_and_reports_progress(tmp_path: Path) -> None:
 def test_mock_ruleset_runs_rule_engine_and_writes_checks(tmp_path: Path) -> None:
     fake = FakeBackend(pdf=make_pdf(pages=2))
     _, job_id = run_job(fake, tmp_path / "work", tmp_path / "inspect", MOCK_RULESET)
-    assert fake.callbacks[-1] == {**fake.callbacks[-1], "stage": "aggregate", "findings": []}  # BE vẫn chưa nhận findings
+    last = fake.callbacks[-1]
+    assert last["stage"] == "aggregate" and last["state"] == "completed"
     job_dir = tmp_path / "inspect" / job_id
+    meta_checks = json.loads((job_dir / "meta.json").read_text(encoding="utf-8"))["checks"]
+    # findings v1 (§5.3): mọi kết quả theo dòng. Checker danh mục cửa ra một kết quả / cửa → không 1:1 với dòng.
+    findings = last["findings"]
+    assert 0 < len(findings) <= meta_checks["linesApplicable"]
+    first = findings[0]
+    assert first["mainResultId"] == f"{job_id}:{first['ruleId']}:{first['lineIndex']}:0"
+    assert first["rule"]["requirementLine"] and first["applicability"] in {"applies", "not-applicable", "unknown"}
+    assert "severity" not in first and "checkType" not in first  # Q-09 / D-08: không gửi khi null
+    assert all(f["status"] != "approved" for f in findings)
+    assert len({f["mainResultId"] for f in findings}) == len(findings)
     checks = (job_dir / "checks.js").read_text(encoding="utf-8")
     assert checks.startswith("window.__ingestChecks(") and '"houseType":"townhouse"' in checks
     meta = json.loads((job_dir / "meta.json").read_text(encoding="utf-8"))
     assert meta["checks"]["rulesTotal"] == 92 and meta["checks"]["source"].startswith("mock")
+    dossier = (job_dir / "dossier.js").read_text(encoding="utf-8")  # mục lục hồ sơ (giai đoạn A)
+    assert dossier.startswith("window.__ingestDossier(") and '"sheets":' in dossier and '"profile":' in dossier
 
 
 def test_failed_job_is_recorded_in_viewer_index(tmp_path: Path) -> None:

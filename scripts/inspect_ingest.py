@@ -2,8 +2,10 @@
 
 Luồng thật (BE gửi việc → MAIN) tự ghi viewer cho từng job; xem tại http://localhost:8000/debug/inspect/.
 
-    .venv/Scripts/python.exe scripts/inspect_ingest.py "D:/Downloads/tieuchuan/PN2.DN-Ban ve mau demo test AI.pdf"
-    .venv/Scripts/python.exe scripts/inspect_ingest.py bản_vẽ.pdf --pages 4,12,37-39 --dpi 150 --open
+    python scripts/inspect_ingest.py "D:/Downloads/tieuchuan/PN2.DN-Ban ve mau demo test AI.pdf"
+    python scripts/inspect_ingest.py bản_vẽ.pdf --pages 4,12,37-39 --dpi 150 --open
+
+Viewer gồm tab "Trang" và "Hồ sơ" (mục lục khung tên, hình / bảng, bảng viết tắt). Tab "Kiểm tra" chỉ có ở luồng thật.
 
 Kết quả ghi vào cùng thư mục với các job (mặc định data/inspect/, không commit).
 """
@@ -19,8 +21,11 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from drawing_checker.config import get_settings  # noqa: E402
+from drawing_checker.features.analyses.service import _dossier_payload  # noqa: E402
+from drawing_checker.features.extraction.service import ExtractionService  # noqa: E402
 from drawing_checker.features.ingest.inspector import IngestInspector  # noqa: E402
 from drawing_checker.features.ingest.service import IngestService  # noqa: E402
+from drawing_checker.features.sheets.service import SheetService  # noqa: E402
 
 
 def parse_pages(spec: str | None, page_count: int) -> list[int]:
@@ -47,6 +52,8 @@ def main() -> None:
     run_id = f"local-{time.strftime('%Y%m%d-%H%M%S')}-{slug}"
     inspector = IngestInspector(args.out, run_id, {"source": "script", "fileName": args.pdf.name})
 
+    sheets_service, extraction = SheetService(), ExtractionService()
+    sheets, abbreviations, entities = [], [], []
     with IngestService().reader(args.pdf) as reader:
         pages = parse_pages(args.pages, reader.page_count)
         inspector.start(reader.page_count, args.dpi)
@@ -55,8 +62,12 @@ def main() -> None:
         for n in pages:
             page = reader.read(n)
             s = inspector.write_page(page, reader.render_jpeg(n, args.dpi) if args.dpi > 0 else None)
+            sheets.append(sheets_service.analyze(page))
+            abbreviations.extend(sheets_service.abbreviations(page))
+            entities.extend(extraction.extract(page))
             print(f"{n:>5} {s['texts']:>6} {s['chars']:>7} {s['paths']:>8} {s['filled']:>6} {s['layers']:>5} "
                   f"{s['textMs']:>5}ms {s['pathsMs']:>5}ms  {s['title'][:50]}")
+    inspector.write_dossier(_dossier_payload(sheets_service.build_index(sheets, abbreviations, entities)))
     index = inspector.finish()
     print(f"Xong trong {inspector.meta['totalSeconds']}s — mở {index}")
     if args.open:

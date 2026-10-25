@@ -80,3 +80,12 @@ def test_errors(tmp_path: Path) -> None:
         service.open(bad)
     with pytest.raises(IngestError, match="không tồn tại"):
         service.load_paths(build_pdf(tmp_path), 2)
+
+
+def test_vni_decoding() -> None:
+    from drawing_checker.features.ingest.vni import decode_vni, is_vni_font
+
+    assert is_vni_font("VNI-Helve-Condense") and not is_vni_font("ArialMT")
+    assert decode_vni("LÔÙP VÖÕA XI MAÊNG M.75 DAØY 20") == "LỚP VỮA XI MĂNG M.75 DÀY 20"
+    assert decode_vni("GAÏCH OÁNG XAÂY 5 HAØNG DOÏC") == "GẠCH ỐNG XÂY 5 HÀNG DỌC"
+    assert decode_vni("ÑÖÔØNG kyõ thuaät") == "ĐƯỜNG kỹ thuật"

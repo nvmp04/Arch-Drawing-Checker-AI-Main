@@ -1,8 +1,8 @@
 """Mô hình hình học duy nhất của MAIN: Polygon (D-06).
 
 Bounding box là Polygon 4 đỉnh với precision=bbox — không có kiểu BBox riêng.
-Hệ tọa độ: CHƯA CHỐT (docs/open-questions.md Q-01). Đề xuất: % 0–100 của trang đang hiển thị
-(đã áp /Rotate), gốc trên-trái — khớp BoundingBoxDto của BE.
+Hệ tọa độ (Q-01, chốt 2026-10-19): nội bộ MAIN dùng point PDF của trang đang hiển thị (đã áp /Rotate),
+gốc trên-trái; gửi BE quy đổi sang % 0–100 cùng trang — khớp BoundingBoxDto của BE (`findings.service`).
 """
 
 from enum import Enum
@@ -27,8 +27,11 @@ class Polygon(BaseModel):
 
     @classmethod
     def from_bbox(cls, x: float, y: float, width: float, height: float) -> "Polygon":
-        raise NotImplementedError
+        return cls(points=[Point(x=x, y=y), Point(x=x + width, y=y), Point(x=x + width, y=y + height),
+                           Point(x=x, y=y + height)], precision=Precision.BBOX)
 
     def bounding_box(self) -> tuple[float, float, float, float]:
-        """(x, y, width, height) bao ngoài — để điền `boundingBox` cho BE hiện tại (L-03)."""
-        raise NotImplementedError
+        """(x, y, width, height) bao ngoài — để điền `boundingBox` cho BE (L-03)."""
+        xs = [p.x for p in self.points]
+        ys = [p.y for p in self.points]
+        return min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys)

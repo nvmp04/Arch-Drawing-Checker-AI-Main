@@ -47,6 +47,8 @@ class DrawingPage(BaseModel):
     height: float
     rotation: int
     texts: list[TextSpan] = []
+    # Chữ ngoài vùng hiển thị (bị cắt khỏi khổ in) — vd. khung tên ở bộ PN2. Chỉ dùng để đọc khung tên (`sheets`).
+    margin_texts: list[TextSpan] = []
     paths: list[VectorPath] = []  # có thể rất lớn (tới ~316k nét/trang) — nạp lười qua load_paths
     timings: dict[str, int] = {}  # ms theo bước trích (textMs, pathsMs) — để đo hiệu năng
 

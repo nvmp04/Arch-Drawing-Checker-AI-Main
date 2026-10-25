@@ -43,22 +43,21 @@ SURFACES: list[tuple[str, re.Pattern]] = [
     ("wall", re.compile(r"\bTƯỜNG\b")),
     ("floor", re.compile(r"\bSÀN\b")),
 ]
-# Ghi chú ngoài bảng: đợt đầu chỉ lấy ghi chú về trần (5.1); tường / sàn mở rộng khi có checker.
-CALLOUT_SURFACES = {"ceiling"}
-CALLOUT_STACK_GAP = 1.2  # × chiều cao chữ: các dòng của một ghi chú xếp chồng sát nhau
-CALLOUT_STACK_DX = 4.0
-CALLOUT_SKIP = re.compile(r"\bĐÈN\b")  # "ĐÈN ỐP TRẦN" là thiết bị điện, không phải vật liệu trần
-# Dấu hiệu trang / bảng thuộc phần ngoài nhà (phạm vi của nhóm 5.x). Danh sách tay — sau này thay bằng embedding.
-EXTERIOR_HINTS = re.compile(r"NGOẠI THẤT|NGOÀI NHÀ|MÁI ĐÓN|SẢNH|\bHIÊN\b|BAN CÔNG|LÔ GIA|LOGIA|SÂN THƯỢNG")
+# --- Bảng thống kê cấu tạo sàn: "KÍ HIỆU | VỊ TRÍ | CHI TIẾT | MÔ TẢ CÁC LỚP CẤU TẠO", mã F1.1, F2.2, F3.1 ---
+ASSEMBLY_HEAD = "MÔ TẢ CÁC LỚP CẤU TẠO"
+ASSEMBLY_CODE = re.compile(r"^[A-Z]{1,3}\d+(?:\.\d+)?$")
+ASSEMBLY_END_GAP = 60.0  # point: hết dòng mô tả một quãng dài → hết bảng
+# Một lớp cấu tạo có thể ghi trên nhiều dòng; dòng mở đầu lớp mới bắt đầu bằng các từ này, còn lại là dòng nối tiếp.
+LAYER_START = re.compile(r"^(LỚP|SÀN|BẢN|ĐÁ|GẠCH|ĐẤT|HOÀN THIỆN|TRẦN|MÀNG)\b")
+OPENING_GLASS = re.compile(r"kính[^0-9]*?dày\s*(\d+(?:[.,]\d+)?)\s*mm", re.IGNORECASE)
 
 
 class ExtractionService:
     """v0: heuristic (regex + ghép theo tọa độ). v1: model trên đồ thị nét vẽ, train từ nhãn đã sửa."""
 
     def extract(self, page: DrawingPage) -> list[Entity]:
-        finishes, used = extract_finish_tables(page)
         return [*extract_levels(page), *extract_stair_flights(page), *extract_openings(page),
-                *finishes, *extract_callouts(page, exclude=used)]
+                *extract_finish_tables(page), *extract_floor_assemblies(page)]
 
 
 def extract_levels(page: DrawingPage) -> list[Entity]:
@@ -142,6 +141,7 @@ def extract_openings(page: DrawingPage) -> list[Entity]:
         if location_label is not None:
             location = next((t.text for t in in_cell if abs(_y0(t) - _y0(location_label)) < 3), None)
         width, height = int(m.group(1)), int(m.group(2))
+        glass = OPENING_GLASS.search(description)
         entities.append(
             Entity(
                 kind=EntityKind.OPENING,
@@ -155,23 +155,20 @@ def extract_openings(page: DrawingPage) -> list[Entity]:
                 layer=size.layer,
                 attributes={"description": description, "location": location or "",
                             "width": width, "height": height,
+                            **({"glass_mm": float(glass.group(1).replace(",", "."))} if glass else {}),
                             **({"code_bbox": _bbox_str(code)} if code else {})},
             )
         )
     return entities
 
 
-def extract_finish_tables(page: DrawingPage) -> tuple[list[Entity], set[int]]:
+def extract_finish_tables(page: DrawingPage) -> list[Entity]:
     """Bảng vật liệu hoàn thiện → mỗi mã một thực thể. PDF từ CAD không có "bảng" thật: chỉ là chữ đặt theo tọa độ,
     nên dựng lại từ mốc (tiêu đề chứa "VẬT LIỆU", đầu cột "KÝ HIỆU" / "MÔ TẢ") và ghép mô tả với mã gần nhất theo y.
-
-    Trả thêm id các khối chữ đã thuộc bảng, để bộ trích ghi chú không lấy lại.
     """
     texts = [t for t in page.texts if abs(t.rotation) < 1]
     heads = [t for t in texts if _norm(t.text) == "KÝ HIỆU"]
-    exterior = _exterior_hint(page)
     entities: list[Entity] = []
-    used: set[int] = set()
     for head in heads:
         hx0, hy0, hx1, hy1 = _box(head)
         desc_head = min((t for t in texts if _norm(t.text) == "MÔ TẢ" and abs(_cy(t) - _cy(head)) < 3 and _box(t)[0] > hx1),
@@ -182,7 +179,7 @@ def extract_finish_tables(page: DrawingPage) -> tuple[list[Entity], set[int]]:
         right = dx + (dx - hx0) * FINISH_WIDTH_RATIO
         neighbour = [_box(t)[0] for t in heads if t is not head and abs(_cy(t) - _cy(head)) < 3 and _box(t)[0] > hx1]
         if neighbour:  # hai bảng đặt cạnh nhau (vd. PN2 trang 22)
-            right = min(right, min(neighbour) - CALLOUT_STACK_DX)
+            right = min(right, min(neighbour) - 4.0)
         title_spans = [t for t in texts if 0 < hy0 - _box(t)[3] < FINISH_TITLE_GAP and hx0 - 2 * FINISH_CODE_SLACK < _box(t)[0] < right]
         title = " ".join(t.text.strip() for t in sorted(title_spans, key=lambda t: _box(t)[0]))
         if "VẬT LIỆU" not in title.upper():
@@ -204,11 +201,9 @@ def extract_finish_tables(page: DrawingPage) -> tuple[list[Entity], set[int]]:
                 continue
             rows[id(min(codes, key=lambda c: abs(_cy(c) - _cy(t))))].append(t)
         surface = _surface(title)
-        scope = "NGOẠI THẤT" if "NGOẠI THẤT" in title.upper() else exterior
         for code in codes:
             parts = sorted(rows[id(code)], key=lambda t: (round(_cy(t)), _box(t)[0]))
             description = " ".join(" ".join(t.text.split()) for t in parts)
-            used.update(id(t) for t in (code, *parts))
             entities.append(Entity(
                 kind=EntityKind.FINISH,
                 page_number=page.page_number,
@@ -217,72 +212,105 @@ def extract_finish_tables(page: DrawingPage) -> tuple[list[Entity], set[int]]:
                 polygon=_union(code, *parts),
                 confidence=0.9,
                 layer=code.layer,
-                attributes={"code": code.text.strip(), "description": description, "surface": surface,
-                            "table": title, "exterior": scope},
+                attributes={"code": code.text.strip(), "description": description, "surface": surface, "table": title},
             ))
-        used.update(id(t) for t in (head, desc_head, *title_spans))
-    return entities, used
-
-
-def extract_callouts(page: DrawingPage, exclude: set[int] = frozenset()) -> list[Entity]:
-    """Ghi chú vật liệu ngoài bảng (vd. "HỆ KHUNG TRẦN / TẤM CEMBOARD", "CHI TIẾT ĐÓNG TRẦN CEMBOARD ĐIỂN HÌNH").
-
-    Một ghi chú CAD thường gồm vài dòng xếp chồng cùng lề trái → ghép các dòng sát nhau. Chưa lần theo đường dẫn
-    (leader) tới đối tượng — bằng chứng là vị trí ghi chú.
-    """
-    texts = [t for t in page.texts if abs(t.rotation) < 1 and id(t) not in exclude]
-    exterior = _exterior_hint(page)
-    entities: list[Entity] = []
-    seen: set[int] = set()
-    for t in texts:
-        upper = t.text.upper()
-        surface = _surface(upper)
-        if surface not in CALLOUT_SURFACES or CALLOUT_SKIP.search(upper) or id(t) in seen:
-            continue
-        block = _stack(t, texts)
-        seen.update(id(b) for b in block)
-        text = " ".join(" ".join(b.text.split()) for b in block)
-        entities.append(Entity(
-            kind=EntityKind.CALLOUT,
-            page_number=page.page_number,
-            text=text,
-            polygon=_union(*block),
-            confidence=0.8,
-            layer=t.layer,
-            attributes={"surface": surface, "exterior": exterior},
-        ))
     return entities
 
 
-def _stack(seed: TextSpan, texts: list[TextSpan]) -> list[TextSpan]:
-    """Các dòng cùng lề trái, cùng layer, nằm sát ngay trên / dưới dòng gốc (tối đa 2 mỗi phía)."""
-    block = [seed]
-    for direction in (-1, 1):
-        current = seed
-        for _ in range(2):
-            h = _box(current)[3] - _box(current)[1]
-            nxt = min((t for t in texts if t.layer == current.layer and abs(_box(t)[0] - _box(current)[0]) <= CALLOUT_STACK_DX
-                       and 0 < direction * (_cy(t) - _cy(current)) <= h * (1 + CALLOUT_STACK_GAP)),
-                      key=lambda t: abs(_cy(t) - _cy(current)), default=None)
-            if nxt is None:
+def extract_floor_assemblies(page: DrawingPage) -> list[Entity]:
+    """Bảng thống kê cấu tạo sàn → mỗi LỚP cấu tạo một thực thể, mang mã dòng, vị trí ("BAN CÔNG SÂN THƯỢNG…"), nhóm tầng.
+
+    Dữ liệu chữ không có lưới bảng nên dựng từ mốc: đầu cột "MÔ TẢ CÁC LỚP CẤU TẠO", "VỊ TRÍ", "KÍ HIỆU";
+    ranh giới giữa hai dòng bảng = khoảng hở lớn nhất giữa các dòng mô tả nằm giữa hai mã liên tiếp.
+    """
+    texts = [t for t in page.texts if abs(t.rotation) < 1]
+    entities: list[Entity] = []
+    for desc_head in (t for t in texts if _norm(t.text) == ASSEMBLY_HEAD):
+        same_line = [t for t in texts if abs(_cy(t) - _cy(desc_head)) < 4 and _box(t)[0] < _box(desc_head)[0]]
+
+        def head(*names: str) -> TextSpan | None:
+            return max((t for t in same_line if _norm(t.text) in names), key=lambda t: _box(t)[0], default=None)
+
+        code_head, loc_head, detail_head = head("KÍ HIỆU", "KÝ HIỆU"), head("VỊ TRÍ"), head("CHI TIẾT")
+        if code_head is None or loc_head is None:
+            continue
+        top = _box(desc_head)[3]
+        kx, lx, dx = _box(code_head)[0], _box(loc_head)[0], _box(desc_head)[0]
+        loc_right = _box(detail_head)[0] if detail_head else dx
+        codes = sorted((t for t in texts if _box(t)[1] > top and kx - 20 < _box(t)[0] < lx - 10
+                        and ASSEMBLY_CODE.match(t.text.strip())), key=_cy)
+        lines = sorted((t for t in texts if _box(t)[1] > top and dx - 30 <= _box(t)[0] <= dx + 80
+                        and any(ch.isalnum() for ch in t.text)), key=_cy)  # bỏ dấu gạch đầu dòng "·"
+        if not codes or not lines:
+            continue
+        size = lines[0].size or 0.0
+        body: list[TextSpan] = []
+        for t in lines:  # dừng ở cuối bảng: quãng trống dài sau mã cuối; bỏ chữ khác cỡ (tiêu đề bảng khác)
+            if body and _cy(t) - _cy(body[-1]) > ASSEMBLY_END_GAP and _cy(t) > _cy(codes[-1]):
                 break
-            block.append(nxt)
-            current = nxt
-    return sorted(block, key=_cy)
+            if size and t.size and abs(t.size - size) > 0.2 * size:
+                continue
+            body.append(t)
+        rows = _split_rows(codes, body)
+        extents = {id(c): (min([_box(c)[1]] + [_box(t)[1] for t in rows[id(c)]]),
+                           max([_box(c)[3]] + [_box(t)[3] for t in rows[id(c)]])) for c in codes}
+        bottom = max(e[1] for e in extents.values()) + ASSEMBLY_END_GAP / 2
+        locations: dict[int, list[TextSpan]] = {id(c): [] for c in codes}
+        for t in texts:
+            if top < _box(t)[1] < bottom and lx - 45 < _box(t)[0] < loc_right - 20 and not any(t is c for c in codes):
+                row = min(codes, key=lambda c: max(extents[id(c)][0] - _cy(t), _cy(t) - extents[id(c)][1], 0.0))
+                locations[id(row)].append(t)
+        groups = [t for t in texts if top < _box(t)[1] < bottom and kx - 90 < _box(t)[0] < kx - 20]
+        for code in codes:
+            lo, hi = extents[id(code)]
+            group = min(groups, key=lambda g: abs(_cy(g) - (lo + hi) / 2), default=None)
+            location = " ".join(t.text.strip() for t in sorted(locations[id(code)], key=_cy))
+            for order, layer in enumerate(_layers(rows[id(code)])):
+                entities.append(Entity(
+                    kind=EntityKind.TABLE_ROW,
+                    page_number=page.page_number,
+                    label=code.text.strip(),
+                    text=" ".join(" ".join(t.text.split()) for t in layer),
+                    polygon=_union(*layer),
+                    confidence=0.9,
+                    layer=layer[0].layer,
+                    attributes={"table": "floor-assembly", "code": code.text.strip(), "location": location,
+                                "group": group.text.strip() if group else "", "order": order},
+                ))
+    return entities
+
+
+def _split_rows(codes: list[TextSpan], lines: list[TextSpan]) -> dict[int, list[TextSpan]]:
+    """Chia các dòng mô tả cho từng mã: ranh giới = khoảng hở lớn nhất giữa hai mã liên tiếp."""
+    rows: dict[int, list[TextSpan]] = {}
+    start = 0
+    for i, code in enumerate(codes):
+        if i + 1 == len(codes):
+            rows[id(code)] = lines[start:]
+            break
+        # Xét từ dòng đầu tiên ngang / dưới mã này tới dòng đầu tiên ngang / dưới mã kế tiếp.
+        first = next((j for j in range(start, len(lines)) if _cy(lines[j]) >= _cy(code)), len(lines))
+        last = next((j for j in range(start, len(lines)) if _cy(lines[j]) >= _cy(codes[i + 1])), len(lines) - 1)
+        candidates = range(max(first, start + 1), last + 1)
+        cut = max(candidates, key=lambda j: _cy(lines[j]) - _cy(lines[j - 1]), default=last + 1)
+        rows[id(code)] = lines[start:cut]
+        start = cut
+    return rows
+
+
+def _layers(lines: list[TextSpan]) -> list[list[TextSpan]]:
+    layers: list[list[TextSpan]] = []
+    for t in sorted(lines, key=_cy):
+        if layers and not LAYER_START.match(t.text.strip().upper()):
+            layers[-1].append(t)
+        else:
+            layers.append([t])
+    return layers
 
 
 def _surface(text: str) -> str:
     upper = text.upper()
     return next((name for name, pattern in SURFACES if pattern.search(upper)), "")
-
-
-def _exterior_hint(page: DrawingPage) -> str:
-    """Từ khóa "ngoài nhà" đầu tiên xuất hiện trên trang ("" nếu không có) — gợi ý phạm vi, không phải kết luận."""
-    for t in page.texts:
-        m = EXTERIOR_HINTS.search(t.text.upper())
-        if m:
-            return m.group(0)
-    return ""
 
 
 def _norm(text: str) -> str:

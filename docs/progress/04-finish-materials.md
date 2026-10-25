@@ -1,5 +1,7 @@
 # 04 · Tiêu chí vật liệu — bước 1: bảng vật liệu hoàn thiện + trần ngoài nhà (2026-10-01)
 
+> ⚠ **ĐÃ GỠ ngày 2026-10-02 (D-18, `progress/06-remove-hardcoded-semantic.md`):** checker 5.1 trần ngoài nhà, `rules/materials.py`, phần trích ghi chú trần. Lý do: cách hiểu tiêu chí viết cứng theo file 4 SAO. Phần đọc bảng trên bản vẽ và sửa ingest vẫn còn. Nội dung dưới đây là nhật ký lúc làm, không còn mô tả đúng hiện trạng.
+
 Người dùng chốt hướng D-17 và cách đi: **luật trước, AI sau, từng bước để thử nghiệm và đánh giá.** Bước 1 = 5.1 trần ngoài nhà (ví dụ comment "không có ốp trần cemboard").
 
 ## Đã làm
@@ -20,3 +22,9 @@ research-log §8: cemboard **không đạt**, bằng chứng trùng cả 3 comme
 - **Gỗ nhựa (FC-02) bị đánh không đạt nhưng người kiểm tra không comment** — người dùng chưa xác định được comment có đầy đủ không, sẽ cập nhật sau (Q-13).
 - Chưa chạy lại luồng thật FE → BE → MAIN cho đợt này (đã kiểm bằng test hồi quy trên cùng PDF).
 - Bước 2: mở rộng khuôn sang các tiêu chí vật liệu khác (tường, chân tường 5.2, ban công 5.3…), đo trên 29 comment.
+
+## Bổ sung 2026-10-02
+
+- Người dùng chốt: **chỉ tập trung checker chắc chắn đúng**; PhoBERT chưa dùng ở bước 2 (chưa có dữ liệu fine-tune — Q-06). Danh mục checker đã làm / dự kiến: `docs/checkers.md` (file mới).
+- Sửa ingest (research-log §9): giải mã font VNI (`ingest/vni.py`), nối dòng chữ bị tách thành nhiều lượt vẽ. 63 test đạt, kết quả kiểm tra cũ không đổi.
+- Tiếp theo: checker #8 cấu tạo sàn theo vị trí (bảng trang 5).

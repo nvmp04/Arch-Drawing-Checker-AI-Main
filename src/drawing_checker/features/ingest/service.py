@@ -15,10 +15,17 @@ import pymupdf
 
 from drawing_checker.common.geometry import Point, Polygon, Precision
 from drawing_checker.features.ingest.schemas import DrawingDocument, DrawingPage, TextSpan, VectorPath
+from drawing_checker.features.ingest.vni import decode_vni, is_vni_font
 
 BEZIER_SEGMENTS = 8  # số đoạn thẳng thay cho một đường cong Bézier
 # Khoảng trắng đặc biệt (NBSP…) do bảng mã font → khoảng trắng thường, để regex bước trích xuất đơn giản.
 # Chữ còn được chuẩn hóa NFC: một số font CAD ghi dấu tiếng Việt dạng tổ hợp ("O" + dấu sắc rời, PN2 trang 6).
+# Nối các lượt vẽ chữ của cùng một dòng (đơn vị: × cỡ chữ). Khoảng hở = từ mép cuối ký tự trước tới mép đầu ký tự sau.
+SPLIT_MAX_GAP = 0.5  # rộng hơn một dấu cách → là hai dòng chữ khác nhau (ô bảng kế bên, số kích thước…)
+SPLIT_MAX_OVERLAP = 0.3
+SPLIT_SPACE_GAP = 0.15  # hở từ mức này → có một dấu cách bị lược
+SPLIT_MAX_OFFSET = 0.3  # lệch khỏi dòng
+SPLIT_SIZE_TOLERANCE = 0.15
 _SPACES = str.maketrans({"\u00a0": " ", "\u2007": " ", "\u202f": " ", "\u3000": " "})
 
 
@@ -66,7 +73,7 @@ class PageReader:
         page = _get_page(self._doc, page_number)
         result = _page_shell(page)
         t0 = time.perf_counter()
-        result.texts = extract_texts(page)
+        result.texts, result.margin_texts = extract_all_texts(page)
         t1 = time.perf_counter()
         result.paths = extract_paths(page)
         t2 = time.perf_counter()
@@ -116,7 +123,7 @@ def _page_shell(page: pymupdf.Page) -> DrawingPage:
 
 def _read_page(page: pymupdf.Page) -> DrawingPage:
     result = _page_shell(page)
-    result.texts = extract_texts(page)
+    result.texts, result.margin_texts = extract_all_texts(page)
     return result
 
 
@@ -126,39 +133,114 @@ def _rect_polygon(x0: float, y0: float, x1: float, y1: float, precision: Precisi
 
 
 def extract_texts(page: pymupdf.Page) -> list[TextSpan]:
-    """Chữ trong trang, theo từng lượt vẽ chữ của PDF; bỏ ký tự nằm ngoài khổ trang."""
+    """Chữ nằm trong vùng hiển thị của trang (xem `extract_all_texts`)."""
+    return extract_all_texts(page)[0]
+
+
+def extract_all_texts(page: pymupdf.Page) -> tuple[list[TextSpan], list[TextSpan]]:
+    """Chữ của trang theo từng lượt vẽ chữ của PDF → (chữ trong vùng hiển thị, chữ ngoài vùng hiển thị).
+
+    Chữ ngoài vùng hiển thị vẫn nằm trong nội dung trang nhưng bị cắt khỏi khổ in (CropBox) — ở bộ PN2 đó là
+    toàn bộ khung tên (tên bản vẽ, số hiệu, tỉ lệ). Giữ riêng để đọc khung tên; không đưa vào bước trích thực thể.
+
+    Hai chỉnh sửa do cách CAD xuất chữ (research-log §9):
+    - font VNI-* dùng bảng mã VNI cũ ("LÔÙP VÖÕA") → giải mã sang Unicode;
+    - một dòng chữ bị tách thành nhiều lượt vẽ quanh ký tự có dấu / khi CAD đổi font giữa chừng
+      ("L" font VNI + "ỚP CHỐNG THẤM" font Arial; "QU" + "Ả" + "N") → nối các lượt sát nhau trên cùng dòng,
+      chèn dấu cách khi khoảng hở cỡ một dấu cách.
+    """
     matrix = page.rotation_matrix  # tọa độ PDF gốc → trang đang hiển thị
     bounds = page.rect
-    spans: list[TextSpan] = []
+    groups: tuple[list[_Run], list[_Run]] = ([], [])  # (trong, ngoài) vùng hiển thị
     for span in page.get_texttrace():
         if span.get("type") == 3:  # chữ ẩn (render mode 3) — không nhìn thấy trên bản vẽ
             continue
-        chars = []
-        box = pymupdf.EMPTY_RECT()
+        parts: dict[bool, list] = {}  # trong vùng hiển thị? → [chữ, khung, ký tự đầu, ký tự cuối]
         for code, _glyph, _origin, char_bbox in span["chars"]:
             rect = pymupdf.Rect(char_bbox) * matrix
-            center = pymupdf.Point((rect.x0 + rect.x1) / 2, (rect.y0 + rect.y1) / 2)
-            if center not in bounds:
-                continue
-            chars.append(chr(code))
-            box |= rect
-        text = unicodedata.normalize("NFC", "".join(chars).translate(_SPACES)).strip()
+            inside = pymupdf.Point((rect.x0 + rect.x1) / 2, (rect.y0 + rect.y1) / 2) in bounds
+            part = parts.setdefault(inside, [[], pymupdf.EMPTY_RECT(), char_bbox, char_bbox])
+            part[0].append(chr(code))
+            part[1] |= rect
+            part[3] = char_bbox
+        font = span.get("font") or ""
+        for inside, (chars, box, first, last) in parts.items():
+            text = "".join(chars).translate(_SPACES)
+            if is_vni_font(font):
+                text = decode_vni(text)
+            run = _Run(text, box, font, span.get("size", 0.0), span["dir"], span.get("layer") or None, first, last)
+            runs = groups[0 if inside else 1]
+            gap = _gap(runs[-1], run) if runs else None
+            if gap is not None:
+                runs[-1].append(run, space=gap > SPLIT_SPACE_GAP * run.size)
+            else:
+                runs.append(run)
+    return _to_spans(groups[0], page.rotation), _to_spans(groups[1], page.rotation)
+
+
+def _to_spans(runs: list["_Run"], page_rotation: int) -> list[TextSpan]:
+    spans: list[TextSpan] = []
+    for run in runs:
+        text = unicodedata.normalize("NFC", run.text).strip()
         if not text:
             continue
-        dx, dy = span["dir"]
+        dx, dy = run.direction
         # dir ở hệ trang gốc; /Rotate xoay theo chiều kim đồng hồ → trừ để ra góc ngược chiều kim đồng hồ.
-        rotation = (math.degrees(math.atan2(-dy, dx)) - page.rotation) % 360
+        rotation = (math.degrees(math.atan2(-dy, dx)) - page_rotation) % 360
         spans.append(
             TextSpan.model_construct(
                 text=text,
-                polygon=_rect_polygon(box.x0, box.y0, box.x1, box.y1),
-                font=span.get("font"),
-                size=round(span.get("size", 0.0), 3),
+                polygon=_rect_polygon(run.box.x0, run.box.y0, run.box.x1, run.box.y1),
+                font=run.font or None,
+                size=round(run.size, 3),
                 rotation=round(rotation, 2),
-                layer=span.get("layer") or None,
+                layer=run.layer,
             )
         )
     return spans
+
+
+class _Run:
+    """Một dòng chữ đang gom: một hoặc nhiều lượt vẽ chữ liền nhau."""
+
+    __slots__ = ("text", "box", "font", "size", "direction", "layer", "first", "last", "_font_len")
+
+    def __init__(self, text: str, box: pymupdf.Rect, font: str, size: float, direction: tuple[float, float],
+                 layer: str | None, first: tuple, last: tuple) -> None:
+        self.text, self.box, self.font, self.size = text, box, font, size
+        self.direction, self.layer, self.first, self.last = direction, layer, first, last
+        self._font_len = len(text)
+
+    def append(self, other: "_Run", space: bool) -> None:
+        self.text += (" " if space else "") + other.text
+        self.box |= other.box
+        self.last = other.last
+        if len(other.text) > self._font_len:  # giữ font của phần dài nhất
+            self.font, self._font_len = other.font, len(other.text)
+
+
+def _gap(prev: _Run, cur: _Run) -> float | None:
+    """Khoảng hở (point, dọc theo dòng) nếu `cur` là phần tiếp của `prev`; None nếu là hai dòng chữ khác nhau.
+
+    Phần tiếp: cùng layer / cỡ / hướng, ký tự đầu của `cur` nằm sát sau ký tự cuối của `prev` trên cùng dòng.
+    Tính ở hệ tọa độ PDF gốc (bbox ký tự và `dir` cùng hệ) nên đúng với chữ xoay.
+    """
+    if prev.layer != cur.layer:
+        return None
+    size = max(prev.size, cur.size)
+    if size <= 0 or abs(prev.size - cur.size) > SPLIT_SIZE_TOLERANCE * size:
+        return None
+    (px, py), (cx, cy) = prev.direction, cur.direction
+    if px * cx + py * cy < 0.99:
+        return None
+    a, b = prev.last, cur.first
+    across = abs(((b[0] + b[2]) - (a[0] + a[2])) / 2 * py - ((b[1] + b[3]) - (a[1] + a[3])) / 2 * px)
+    if across > SPLIT_MAX_OFFSET * size:
+        return None
+    end = max(x * px + y * py for x in (a[0], a[2]) for y in (a[1], a[3]))
+    start = min(x * px + y * py for x in (b[0], b[2]) for y in (b[1], b[3]))
+    gap = start - end
+    return gap if -SPLIT_MAX_OVERLAP * size <= gap <= SPLIT_MAX_GAP * size else None
 
 
 def extract_paths(page: pymupdf.Page) -> list[VectorPath]:

@@ -61,9 +61,15 @@
   #left .tabs { display: flex; border-bottom: 1px solid var(--line); }
   #left .tabs button { flex: 1; border: 0; border-radius: 0; padding: 8px; background: var(--panel); cursor: pointer; }
   #left .tabs button.on { box-shadow: inset 0 -2px var(--accent); font-weight: 600; }
-  #pages, #checks { overflow: auto; flex: 1; }
+  #pages, #checks, #dossier { overflow: auto; flex: 1; }
   #pages { border-right: 0; }
-  #checks { padding: 8px 10px; }
+  #checks, #dossier { padding: 8px 10px; }
+  #dossier h3 { font-size: 13px; margin: 12px 0 4px; }
+  #dossier table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  #dossier td, #dossier th { padding: 3px 4px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  #dossier th { color: var(--muted); font-weight: 600; }
+  #dossier .sh { cursor: pointer; } #dossier .sh:hover { background: #f0f0ec; }
+  #dossier .vw { color: var(--muted); font-size: 11px; } #dossier .vw span { cursor: pointer; text-decoration: underline dotted; }
   .sum { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
   .chip { padding: 2px 8px; border-radius: 10px; font-size: 12px; border: 1px solid var(--line); background: #fafaf8; }
   .cov { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
@@ -76,6 +82,13 @@
   .res .why { font-size: 12px; color: #3a3a37; margin-top: 4px; }
   .res .ev { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
   .res .ev button { font-size: 11px; padding: 1px 6px; }
+  .res .rv { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); font-size: 12px; }
+  .res .rv button, .res .rv select, .res .rv input { font-size: 11px; padding: 1px 6px; }
+  .res .rv input { flex: 1; min-width: 120px; }
+  .res .rv .done { color: #2e7d32; font-weight: 600; }
+  .res .rv .done.bad { color: #c62828; }
+  .res.reviewed { border-left: 3px solid #2e7d32; }
+  .res.reviewed.bad { border-left-color: #c62828; }
   .badge { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; color: #fff; white-space: nowrap; }
   .s-pass { background: #1a7f37; } .s-fail { background: #c62828; } .s-warning { background: #b26a00; }
   .s-pending { background: #6b4fbb; } .s-unknown { background: #8a8a85; } .s-unsupported { background: #c4c4bf; color: #1d1d1b; }
@@ -99,8 +112,9 @@
 </header>
 
 <aside id="left">
-  <div class="tabs"><button data-tab="pages" class="on">Trang</button><button data-tab="checks" id="checksTab">Kiểm tra</button></div>
+  <div class="tabs"><button data-tab="pages" class="on">Trang</button><button data-tab="dossier" id="dossierTab">Hồ sơ</button><button data-tab="checks" id="checksTab">Kiểm tra</button></div>
   <div id="pages"></div>
+  <div id="dossier" hidden><span class="hint">Chưa có mục lục hồ sơ cho lần chạy này.</span></div>
   <div id="checks" hidden><span class="hint">Chưa có kết quả kiểm tra cho lần chạy này.</span></div>
 </aside>
 
@@ -412,66 +426,175 @@ window.addEventListener("keydown", (e) => {
 });
 
 // ---- tab Kiểm tra ----
-const STATUS_VI = { pass: "Đạt", fail: "Không đạt", warning: "Cảnh báo", pending: "Chờ người", unknown: "Không thấy dữ liệu", unsupported: "Chưa hỗ trợ" };
+// Bốn trạng thái của checklist (đối tác): Đạt / Không đạt / Cảnh báo / Cần kiểm tra — "Cần kiểm tra" ghi rõ vì sao.
+const STATUS_VI = { pass: "Đạt", fail: "Không đạt", warning: "Cảnh báo", pending: "Cần kiểm tra", unknown: "Cần kiểm tra · không thấy dữ liệu", unsupported: "Cần kiểm tra · chưa tự kiểm" };
 document.querySelectorAll("#left .tabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
 function setTab(tab) {
   document.querySelectorAll("#left .tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === tab));
-  $("pages").hidden = tab !== "pages"; $("checks").hidden = tab !== "checks";
-  document.body.classList.toggle("wide", tab === "checks");
+  $("pages").hidden = tab !== "pages"; $("checks").hidden = tab !== "checks"; $("dossier").hidden = tab !== "dossier";
+  document.body.classList.toggle("wide", tab === "checks" || tab === "dossier");
   state.tab = tab; updateHash();
 }
 function updateHash() {
   const parts = [];
   if (state.page) parts.push("p=" + state.page.n);
-  if (state.tab === "checks") parts.push("tab=checks");
+  if (state.tab === "checks" || state.tab === "dossier") parts.push("tab=" + state.tab);
   history.replaceState(null, "", "#" + parts.join("&"));
 }
-window.__ingestChecks = (data) => { state.checks = data; renderChecks(); };
+// ---- duyệt kết quả: Đúng / Sai vị trí / Sai → đáp án đúng; lưu qua MAIN vào data/reviews/<hồ sơ>.jsonl ----
+const OUTCOME_VI = { pass: "Đạt", fail: "Không đạt", warning: "Cảnh báo", pending: "Cần kiểm tra", "n/a": "Không áp dụng", unknown: "Không kết luận" };
+const EXPECTED = ["pass", "fail", "warning", "pending", "n/a"];
+state.reviews = {};
+let blind = false;
+try { blind = localStorage.getItem("ingest.blind") === "1"; } catch (e) {}
+const rvKey = (r) => r.ruleId + "#" + r.line;
+async function loadReviews() {
+  const c = state.checks; if (!c || !c.dossier) return;
+  try {
+    const res = await fetch("/debug/reviews/" + c.dossier);
+    if (res.ok) (await res.json()).forEach((v) => { state.reviews[v.ruleId + "#" + v.lineIndex] = v; });
+    state.reviewApi = res.ok;
+  } catch (e) { state.reviewApi = false; }
+  renderChecks();
+}
+async function saveReview(r, verdict, expected, note) {
+  const body = { ruleId: r.ruleId, code: r.code, lineIndex: r.line, lineText: r.lineText, verdict, expected,
+    predicted: r.outcome, note: note || null, runId: META.runId, model: r.ai?.model ?? null,
+    promptVersion: r.ai?.promptVersion ?? null, callId: r.ai?.callId ?? null, blind };
+  let res;
+  try {
+    res = await fetch("/debug/reviews/" + state.checks.dossier, { method: "POST",
+      headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  } catch (e) { res = { ok: false, status: "mạng" }; }
+  if (!res.ok) { alert("Không lưu được kết quả duyệt (" + res.status + "). MAIN có đang chạy không?"); return; }
+  state.reviews[rvKey(r)] = await res.json();
+  renderChecks();
+}
+function reviewBar(r, idx) {
+  if (!state.checks.dossier || !r.ruleId) return "";
+  if (state.reviewApi === false) return `<div class="rv hint">Mở viewer qua MAIN (http://localhost:8000/debug/inspect/…) để duyệt.</div>`;
+  const v = state.reviews[rvKey(r)];
+  const label = v && (v.verdict === "correct" ? "Đúng" : v.verdict === "wrong-location" ? "Đúng, sai vị trí" : "Sai → " + OUTCOME_VI[v.expected]);
+  const done = v ? `<span class="done ${v.expected !== r.outcome ? "bad" : ""}">✔ ${label}</span>` : "";
+  const note = `<input data-note="${idx}" placeholder="ghi chú (tùy chọn)" value="${esc(v?.note ?? "")}">`;
+  if (blind && !v) {
+    return `<div class="rv">Kết luận đúng: ${EXPECTED.map((o) => `<button data-blind="${idx}" data-o="${o}">${OUTCOME_VI[o]}</button>`).join("")}${note}</div>`;
+  }
+  return `<div class="rv">${done}
+    <button data-ok="${idx}">Đúng</button><button data-loc="${idx}">Sai vị trí</button>
+    Sai → <select data-wrong="${idx}"><option value="">chọn kết luận đúng…</option>
+      ${EXPECTED.filter((o) => o !== r.outcome).map((o) => `<option value="${o}">${OUTCOME_VI[o]}</option>`).join("")}</select>
+    ${note}</div>`;
+}
+window.__ingestChecks = (data) => { state.checks = data; renderChecks(); loadReviews(); };
 function statusOf(r) { return r.supported ? r.status : "unsupported"; }
 function renderChecks() {
   const c = state.checks; if (!c) return;
   const rows = c.rows, cov = c.coverage;
   const counts = {}; rows.forEach((r) => { const k = statusOf(r); counts[k] = (counts[k] || 0) + 1; });
   $("checksTab").textContent = `Kiểm tra (${(counts.pass || 0)}✓ ${(counts.fail || 0)}✗)`;
-  const filter = $("checks").querySelector("select")?.value || "checked";
-  const shown = rows.filter((r) => filter === "all" || (filter === "checked" ? r.supported : statusOf(r) === filter));
+  const filter = $("checks").querySelector("label.hint select")?.value || "checked";
+  const reviewed = rows.filter((r) => state.reviews[rvKey(r)]);
+  const shown = rows.filter((r) => filter === "all" || (filter === "checked" ? r.supported
+    : filter === "unreviewed" ? !state.reviews[rvKey(r)] : statusOf(r) === filter));
   const order = { fail: 0, warning: 1, pending: 2, pass: 3, unknown: 4, unsupported: 5 };
   shown.sort((a, b) => order[statusOf(a)] - order[statusOf(b)]);
   $("checks").innerHTML = `
     <div class="sum">${Object.keys(order).filter((k) => counts[k]).map((k) => `<span class="chip"><span class="badge s-${k}">${counts[k]}</span> ${STATUS_VI[k]}</span>`).join("")}</div>
     <div class="cov">Nguồn rule: ${esc(c.source)} · loại nhà ${esc(c.houseType)} · nhóm ${esc(c.categories.join(", "))}<br>
       ${cov.rulesApplicable}/${cov.rulesTotal} rule áp dụng · ${cov.linesSupported}/${cov.linesApplicable} dòng tiêu chí có checker ·
-      thực thể: ${Object.entries(c.entities).map(([k, v]) => `${k} ${v}`).join(", ") || "—"}</div>
+      thực thể: ${Object.entries(c.entities).map(([k, v]) => `${k} ${v}`).join(", ") || "—"}
+      ${cov.ai ? `<br>AI: ${cov.ai.lines} dòng · ${cov.ai.calls} lần gọi · ${cov.ai.usd} USD${cov.ai.errors ? ` · ${cov.ai.errors} lỗi` : ""}${cov.ai.stopped ? ` · <b>${esc(cov.ai.stopped)}</b>` : ""}` : ""}</div>
+    ${c.dossier ? `<div class="cov">Đã duyệt ${reviewed.length}/${rows.length} dòng · hệ thống đúng ${reviewed.filter((r) => state.reviews[rvKey(r)].expected === r.outcome).length} ·
+      <label><input type="checkbox" id="blindBox" ${blind ? "checked" : ""}> Chấm mù (ẩn kết luận của hệ thống tới khi chấm xong dòng)</label></div>` : ""}
     <label class="hint">Hiện <select>
-      ${[["checked", "Đã kiểm (có checker)"], ["all", "Tất cả dòng"], ...Object.keys(order).map((k) => [k, STATUS_VI[k]])]
+      ${[["checked", "Đã kiểm (có checker)"], ["all", "Tất cả dòng"], ...(c.dossier ? [["unreviewed", "Chưa duyệt"]] : []), ...Object.keys(order).map((k) => [k, STATUS_VI[k]])]
         .map(([v, t]) => `<option value="${v}" ${v === filter ? "selected" : ""}>${t}</option>`).join("")}
     </select></label>
     ${shown.map((r, i) => resultCard(r, rows.indexOf(r))).join("") || '<p class="hint">Không có dòng nào.</p>'}`;
-  $("checks").querySelector("select").onchange = renderChecks;
+  $("checks").querySelector("label.hint select").onchange = renderChecks;
+  const bb = $("blindBox");
+  if (bb) bb.onchange = () => { blind = bb.checked; try { localStorage.setItem("ingest.blind", blind ? "1" : "0"); } catch (e) {} renderChecks(); };
 }
 function resultCard(r, idx) {
   const st = statusOf(r);
   const pages = {};
   r.evidence.forEach((e) => { (pages[e.page] = pages[e.page] || []).push(e.bbox); });
-  return `<div class="res">
-    <div class="hd"><span class="badge s-${st}">${STATUS_VI[st]}</span><span class="cd">${esc(r.code)}</span>
+  const v = state.reviews[rvKey(r)];
+  const hide = blind && !v && state.checks.dossier;  // chấm mù: chưa chấm thì không lộ kết luận của hệ thống
+  return `<div class="res ${v ? "reviewed" : ""} ${v && v.expected !== r.outcome ? "bad" : ""}">
+    <div class="hd">${hide ? "" : `<span class="badge s-${st}">${r.outcome === "n/a" ? "Không áp dụng" : STATUS_VI[st]}</span>`}<span class="cd">${esc(r.code)}</span>
       <span class="tt">${esc([...r.headings, r.title].filter(Boolean).join(" › "))}</span></div>
     <div class="ln">${esc(r.lineText)}</div>
-    ${r.supported ? `<div class="kv2">Trích: <b>${esc(r.extracted ?? "—")}</b> · Chuẩn: <b>${esc(r.standard ?? "—")}</b> · tin cậy ${r.confidence.toFixed(2)}</div>` : ""}
-    <div class="why">${esc(r.reason)}</div>
+    ${r.supported && !hide ? `<div class="kv2">Trích: <b>${esc(r.extracted ?? "—")}</b> · Chuẩn: <b>${esc(r.standard ?? "—")}</b> · tin cậy ${r.confidence.toFixed(2)}</div>` : ""}
+    ${hide ? "" : `<div class="why">${esc(r.reason)}</div>`}
     ${Object.keys(pages).length ? `<div class="ev">${Object.entries(pages).map(([pg, boxes]) =>
       `<button data-r="${idx}" data-p="${pg}" title="Xem bằng chứng trên trang ${pg}">tr.${pg}${boxes.length > 1 ? " ×" + boxes.length : ""}</button>`).join("")}</div>` : ""}
+    ${reviewBar(r, idx)}
   </div>`;
 }
+const noteOf = (idx) => $("checks").querySelector(`input[data-note="${idx}"]`)?.value.trim();
 $("checks").addEventListener("click", (e) => {
+  const ok = e.target.closest("button[data-ok]"), loc = e.target.closest("button[data-loc]"), bl = e.target.closest("button[data-blind]");
+  if (ok || loc || bl) {
+    const idx = +(ok || loc || bl).dataset[ok ? "ok" : loc ? "loc" : "blind"], r = state.checks.rows[idx];
+    if (bl) { const o = bl.dataset.o; saveReview(r, o === r.outcome ? "correct" : "wrong", o, noteOf(idx)); }
+    else saveReview(r, ok ? "correct" : "wrong-location", r.outcome, noteOf(idx));
+    return;
+  }
   const b = e.target.closest("button[data-r]"); if (!b) return;
   const r = state.checks.rows[+b.dataset.r], pg = +b.dataset.p;
   if (!META.pages.some((p) => p.n === pg)) { alert(`Trang ${pg} không có trong lần xuất này.`); return; }
   showPage(pg, r.evidence.filter((ev) => ev.page === pg).map((ev) => ev.bbox));
 });
+$("checks").addEventListener("change", (e) => {
+  const sel = e.target.closest("select[data-wrong]"); if (!sel || !sel.value) return;
+  const idx = +sel.dataset.wrong; saveReview(state.checks.rows[idx], "wrong", sel.value, noteOf(idx));
+});
 (function loadChecks() {
   const s = document.createElement("script");
   s.src = "checks.js"; s.onerror = () => {};
+  document.head.appendChild(s);
+})();
+
+// ---- tab Hồ sơ: đặc điểm hồ sơ, mục lục trang (khung tên + hình / bảng), bảng viết tắt ----
+window.__ingestDossier = (data) => { state.dossier = data; renderDossier(); };
+function renderDossier() {
+  const d = state.dossier; if (!d) return;
+  const pf = d.profile;
+  const kv = (k, v) => `<tr><th>${k}</th><td>${esc(v == null || v === "" ? "—" : String(v))}</td></tr>`;
+  const levels = Object.entries(pf.levels).map(([k, v]) => `${k} ${(v / 1000).toFixed(3)}`).join(" · ");
+  $("dossierTab").textContent = `Hồ sơ (${d.sheets.filter((s) => s.name).length}/${d.sheets.length})`;
+  $("dossier").innerHTML = `
+    <p class="hint">Chỉ đọc từ bản vẽ (khung tên, tiêu đề, bảng viết tắt, cao độ) — chưa suy luận, chưa đối chiếu tiêu chí.</p>
+    <h3>Đặc điểm hồ sơ</h3>
+    <table>${kv("Hạng mục", pf.items.join(", "))}${kv("Công trình", pf.project)}${kv("Giai đoạn", pf.phase)}
+      ${kv("Số trang", pf.page_count)}${kv("Các tầng", pf.storeys.join(", "))}${kv("Có hầm", pf.has_basement ? "có" : "không thấy")}
+      ${kv("Có tum", pf.has_attic ? "có" : "không thấy")}${kv("Cao độ (m)", levels)}${kv("Tỉ lệ khung tên", pf.scales.join(", "))}
+      ${pf.pages_without_title_block.length ? kv("Trang không đọc được khung tên", pf.pages_without_title_block.join(", ")) : ""}</table>
+    <h3>Mục lục trang (${d.sheets.length})</h3>
+    <table><tr><th>Tr.</th><th>Tên bản vẽ · hình / bảng trong trang</th><th>Tỉ lệ</th><th>Số hiệu</th></tr>
+      ${d.sheets.map((s) => `<tr class="sh" data-n="${s.n}"><td>${s.n}</td><td><b>${esc(s.name || "—")}</b>
+        ${s.views.length ? `<div class="vw">${s.views.map((v, i) => `<span data-n="${s.n}" data-v="${i}">${esc(v.title)}</span>`).join(" · ")}</div>` : ""}</td>
+        <td>${esc(s.scale || "")}</td><td>${esc(s.number || "")}</td></tr>`).join("")}</table>
+    <h3>Bảng viết tắt (${d.abbreviations.length})</h3>
+    <table><tr><th>Viết tắt</th><th>Nghĩa</th><th>Tr.</th></tr>
+      ${d.abbreviations.map((a, i) => `<tr class="sh" data-a="${i}"><td><b>${esc(a.abbr)}</b></td><td>${esc(a.meaning)}</td><td>${a.page}</td></tr>`).join("")}</table>`;
+}
+$("dossier").addEventListener("click", (e) => {
+  const d = state.dossier; if (!d) return;
+  const v = e.target.closest("span[data-v]"), row = e.target.closest("tr.sh");
+  let pg = null, boxes = null;
+  if (v) { const s = d.sheets.find((x) => x.n === +v.dataset.n); pg = s.n; boxes = [s.views[+v.dataset.v].bbox]; }
+  else if (row?.dataset.a) { const a = d.abbreviations[+row.dataset.a]; pg = a.page; boxes = [a.bbox]; }
+  else if (row?.dataset.n) pg = +row.dataset.n;
+  if (pg == null) return;
+  if (!META.pages.some((p) => p.n === pg)) { alert(`Trang ${pg} không có trong lần xuất này.`); return; }
+  showPage(pg, boxes);
+});
+(function loadDossier() {
+  const s = document.createElement("script");
+  s.src = "dossier.js"; s.onerror = () => {};
   document.head.appendChild(s);
 })();
 
@@ -492,6 +615,7 @@ try { const saved = +localStorage.getItem("ingest.page." + META.runId); if (META
 const fromHash = +(location.hash.match(/p=(\d+)/) || [])[1];
 if (META.pages.some((p) => p.n === fromHash)) start = fromHash;
 if (/tab=checks/.test(location.hash)) setTab("checks");
+if (/tab=dossier/.test(location.hash)) setTab("dossier");
 showPage(start);
 </script>
 </body>
